@@ -8,9 +8,16 @@ const Navigation = ({ account, setAccount }) => {
     }
 
     return (
+    
         <nav>
             <div className='nav__brand'>
-                <h1>AI NFT Generator</h1>
+                <h1>ArtBlocks</h1>
+            </div>
+            <div className='nav__brand'>
+                <h6>Home</h6>
+                <h6>About</h6>
+                <h6>Store</h6>
+                <h6>Contact</h6>
             </div>
 
             {account ? (
@@ -29,7 +36,9 @@ const Navigation = ({ account, setAccount }) => {
                     Connect
                 </button>
             )}
+         
         </nav>
+      
     );
 }
 
