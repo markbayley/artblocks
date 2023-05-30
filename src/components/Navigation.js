@@ -14,10 +14,10 @@ const Navigation = ({ account, setAccount }) => {
                 <h1>ArtBlocks</h1>
             </div>
             <div className='nav__brand'>
-                <h6>Home</h6>
+                {/* <h6>Home</h6>
                 <h6>About</h6>
                 <h6>Store</h6>
-                <h6>Contact</h6>
+                <h6>Contact</h6> */}
             </div>
 
             {account ? (

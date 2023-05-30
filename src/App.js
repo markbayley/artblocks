@@ -55,6 +55,8 @@ function App() {
     const url = await uploadImage(imageData);
 
     e.target.reset();
+    setKeyword([]);
+    setActive([]);
   };
 
   const clearHandler = async (e) => {
@@ -260,10 +262,40 @@ function App() {
     },
   ];
 
+  const tabs = [
+    {
+      name: "bird",
+    },
+    {
+      name: "stripes",
+    },
+    {
+      name: "woman",
+    },
+    {
+      name: "fruit",
+    },
+    {
+      name: "yellow",
+    },
+    {
+      name: "dove",
+    },
+    // {
+    //   name: "turtle",
+    // },
+    // {
+    //   name: "dots",
+    // },
+
+  ];
+
   console.log("thumbs", thumbs);
 
   const handleChecked = (e) => {
     e.preventDefault();
+
+    // setDescription((prevArr) => [...prevArr, " " + e.target.value]);
 
     // active.push(e.target.value)
     // setActive(active + ", " + e.target.value)
@@ -292,6 +324,7 @@ function App() {
 
       <div className="form">
         <form onSubmit={submitHandler}>
+          <div className="tabs">
           <input
             required
             type="text"
@@ -300,8 +333,24 @@ function App() {
               setName(e.target.value);
             }}
           ></input>
+             <input
+            required
+            type="text"
+            placeholder="NFT description..."
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+          ></input>
+          </div>
 
           <div className="check">
+            <select onChange={(e) => setStyle(e.target.value)}>
+              {styles.map((style, index) => (
+                <option value={style.name} key={index}>
+                  {style.name}
+                </option>
+              ))}
+            </select>
             <select onChange={(e) => setStyle(e.target.value)}>
               {styles.map((style, index) => (
                 <option value={style.name} key={index}>
@@ -343,16 +392,9 @@ function App() {
                   count  */}
           </div>
 
-          <input
-            required
-            type="text"
-            placeholder="NFT description..."
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-          ></input>
+       
 
-          <div>
+          {/* <div>
             <button
               onClick={handleChecked}
               value="bird"
@@ -428,7 +470,43 @@ function App() {
             >
               cyan
             </button>
-          </div>
+          </div> */}
+
+
+      <div className="tabs">
+        {tabs.map((tab, index) => (
+       
+          <button
+              key={index}
+              onClick={handleChecked}
+              value={tab.name}
+              className={`button ${
+                active.includes(" " + tab.name) ? "activeButton" : ""
+              }`}
+            >
+              {tab.name}
+            </button>
+         
+        ))}
+        </div>
+        {/* <div className="">
+        {tabs.map((tab, index) => (
+       
+          <button
+              key={index}
+              onClick={handleChecked}
+              value={tab.name}
+              className={`button ${
+                active.includes(" " + tab.name) ? "activeButton" : ""
+              }`}
+            >
+              {tab.name}
+            </button>
+         
+        ))}
+        </div>
+         */}
+           
 
           {image ? (
             <input type="submit" value="Create"></input>
@@ -476,12 +554,12 @@ function App() {
           {minting ? (
             <div>
               <br />
-              <p>"Minting block..."</p>
+              <p>Minting block...</p>
             </div>
           ) : creating ? (
             <div>
               <br />
-              <p>"Your Artblock is almost ready..."</p>
+              <p>Your Artblock is almost ready...</p>
             </div>
           ) : (
             <div>
@@ -497,10 +575,10 @@ function App() {
                 {style ? <b>&nbsp;{style}&nbsp;-</b> : "Style - "}{" "}
                 {artist ? <b>&nbsp;{artist}&nbsp;</b> : "Artist"}{" "}
               </p>
-              <p>
+              {/* <p>
                 {" "}
                 #{count}/10 &copy; {currentYear}{" "}
-              </p>
+              </p> */}
             </div>
           )}
         </div>
@@ -511,12 +589,12 @@ function App() {
           .map((item, index) => (
             <div className="thumbnail" key={index}>
               <img src={item[0]} alt="AI thumbnail" />
-              <div>
+              {/* <div>
                 <p>
                   {item[1]}
                   <em>"{item[2]}"</em>
                 </p>
-              </div>
+              </div> */}
 
               <p>
                 View&nbsp;<a href={url}>Metadata</a>
