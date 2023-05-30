@@ -13,76 +13,97 @@ import NFT from "./abis/NFT.json";
 
 // Config
 import config from "./config.json";
-import { ToggleButton } from "react-bootstrap";
 
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
+  const [nft, setNFT] = useState(null)
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
-  const [thumbs, setThumbs] = useState([]);
-  const [meta, setMeta] = useState([]);
   const [url, setURL] = useState(null);
+
+  const [message, setMessage] = useState("")
+  const [isWaiting, setIsWaiting] = useState(false)
 
   const [style, setStyle] = useState("");
   const [artist, setArtist] = useState("");
   const [medium, setMedium] = useState("");
+  const [colour, setColour] = useState("");
+  const [pattern, setPattern] = useState("");
+  const [subject, setSubject] = useState("");
   const [keyword, setKeyword] = useState([]);
-
   const [count, setCount] = useState(0);
 
   const [creating, setCreating] = useState(null);
   const [minting, setMinting] = useState(null);
-
-  const [checked, setChecked] = useState(false);
   const [active, setActive] = useState([]);
-
   const currentYear = new Date().getFullYear();
 
+  const [thumbs, setThumbs] = useState([]);
+
+  // Local Storage
+  const storedItems = JSON.parse(localStorage.getItem("items"));
+  const [items, setItems] = useState(storedItems);
+  // console.log(localStorage);
+
+  useEffect(() => {
+    localStorage.setItem("items", JSON.stringify(items));
+  }, [items]);
+
+
   const loadBlockchainData = async () => {
+    console.log("Loading blockchain data...");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
+
+    const network = await provider.getNetwork()
+
+    const nft = new ethers.Contract(config[network.chainId].nft.address, NFT, provider)
+    setNFT(nft)
+
+    const name = await nft.name()
+    console.log("name", name)
   };
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    setCount(count + 1);
 
-    const imageData = createImage();
+    // Form Request
+    const submitHandler = async (e) => {
+      e.preventDefault();
 
-    const url = await uploadImage(imageData);
+      if (name === "" || description === "") {
+        window.alert("Please provide a name and description")
+        return
+      }
 
-    e.target.reset();
-    setKeyword([]);
-    setActive([]);
-  };
+      setIsWaiting(true)
+    
+      const imageData = createImage();
+  
+      const url = await uploadImage(imageData);
 
-  const clearHandler = async (e) => {
-    e.target.reset();
-  };
+      await mintImage(url)
+
+      setIsWaiting(false)
+      setMessage("")
+
+      setMessage("success!")
+  
+      setCount(count + 1);
+      e.target.reset();
+      setKeyword([]);
+      setActive([]);
+    };
+  
 
   const createImage = async () => {
+    setMessage("Generating Image...");
     setCreating(true);
     const URL = `https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2`;
 
-    meta.push([
-      name +
-        " " +
-        description +
-        " " +
-        medium +
-        " " +
-        style +
-        " " +
-        artist +
-        " " +
-        keyword,
-    ]);
-    setMeta(meta);
-
     // Send the request
+    setMessage("Sending the request...");
     const response = await axios({
       url: URL,
       method: "POST",
@@ -97,13 +118,21 @@ function App() {
           " " +
           description +
           " " +
+          subject +
+          " " +
           name +
           " " +
           style +
           " " +
           artist +
           " " +
-          medium,
+          medium +
+          " " +
+          colour + 
+          " " +
+          pattern +
+          " " + 
+          count,
         options: { wait_for_model: true },
       }),
       responseType: "arraybuffer",
@@ -117,6 +146,7 @@ function App() {
 
     setImage(img);
 
+    console.log("Creating Thumbnail data...");
     thumbs.push([
       img,
       name,
@@ -124,10 +154,18 @@ function App() {
       style,
       artist,
       medium,
+      colour,
       keyword,
+      pattern,
       count,
+      subject
     ]);
+
     setThumbs(thumbs);
+    console.log("thumbs", thumbs);
+
+    setItems(thumbs)
+    console.log("items", items)
 
     setCreating(false);
 
@@ -135,14 +173,15 @@ function App() {
   };
 
   const uploadImage = async (imageData) => {
-    console.log("Uploading Image...");
-    setMinting(true);
+    setMessage("Uploading Image...");
     // Create instance to NFT.Storage
+    console.log("Creating instance to NFT.Storage");
     const nftstorage = new NFTStorage({
       token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
     });
 
     // Send request to store image
+    setMessage("Sending request to store image");
     const { ipnft } = await nftstorage.store({
       image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
       name: name,
@@ -150,17 +189,39 @@ function App() {
       style: style,
       artist: artist,
       medium: medium,
+      colour: colour,
       keyword: keyword,
       count: count,
+      subject: subject,
+      pattern: pattern
     });
 
     // Save the URL
+    setMessage("Saving the URL");
     const url = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
     setURL(url);
     setMinting(false);
 
+    console.log("active", active);
+    console.log("keyword", keyword);
+    console.log("url", url);
+
     return url;
   };
+
+  const mintImage = async (tokenURI) => {
+    setMessage("Waiting for Mint...")
+
+    const signer = await provider.getSigner()
+    const transaction = await nft.connect(signer).mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") })
+    await transaction.wait()
+  }
+
+  useEffect(() => {
+    loadBlockchainData()
+  }, [])
+
+
 
   useEffect(() => {
     loadBlockchainData();
@@ -262,36 +323,105 @@ function App() {
     },
   ];
 
-  const tabs = [
+  const colours = [
     {
-      name: "bird",
+      name: "Colour",
     },
     {
-      name: "stripes",
+      name: "Turquoise",
     },
     {
-      name: "woman",
+      name: "Lime Green",
     },
     {
-      name: "fruit",
+      name: "Yellow Ochre",
     },
     {
-      name: "yellow",
+      name: "Raw Sienna",
     },
     {
-      name: "dove",
+      name: "Fushcia",
     },
+    {
+      name: "Coral Pink",
+    },
+    {
+      name: "Crimson",
+    },
+    {
+      name: "Mauve",
+    },
+    {
+      name: "Goldenrod",
+    },
+  ];
+
+  const patterns = [
+    {
+      name: "Pattern",
+    },
+    {
+      name: "Stripes",
+    },
+    {
+      name: "Checkered",
+    },
+    {
+      name: "Dots",
+    },
+    {
+      name: "Zig Zags",
+    },
+    {
+      name: "Curves",
+    },
+    {
+      name: "Speckled",
+    },
+    {
+      name: "Swirls",
+    },
+    {
+      name: "Spiked",
+    },
+    {
+      name: "Soft",
+    },
+    {
+      name: "Angular",
+    },
+  ];
+
+  const subjects = [
+    {
+      name: "Subject",
+    },
+    {
+      name: "Landscape",
+    },
+    {
+      name: "Portrait",
+    },
+    {
+      name: "Seascape",
+    },
+    {
+      name: "Human Figure",
+    },
+    {
+      name: "Fruit Bowl",
+    },
+
     // {
     //   name: "turtle",
     // },
     // {
     //   name: "dots",
     // },
-
   ];
 
-  console.log("thumbs", thumbs);
 
+  // Toggle Buttons
   const handleChecked = (e) => {
     e.preventDefault();
 
@@ -313,10 +443,9 @@ function App() {
     // keyword.push(e.target.value)
   };
 
-  console.log("active", active);
-  console.log("keyword", keyword);
-
-  console.log("url", url);
+  // const clearHandler = async (e) => {
+  //   e.target.reset();
+  // };
 
   return (
     <div>
@@ -324,25 +453,29 @@ function App() {
 
       <div className="form">
         <form onSubmit={submitHandler}>
+          {/* <input items={items} setItems={setItems} /> */}
+
+          {/* Text Inputs */}
           <div className="tabs">
-          <input
-            required
-            type="text"
-            placeholder="NFT name..."
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          ></input>
-             <input
-            required
-            type="text"
-            placeholder="NFT description..."
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-          ></input>
+            <input
+              required
+              type="text"
+              placeholder="NFT name..."
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+            ></input>
+            <input
+              required
+              type="text"
+              placeholder="NFT description..."
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
+            ></input>
           </div>
 
+          {/* Select inputs */}
           <div className="check">
             <select onChange={(e) => setStyle(e.target.value)}>
               {styles.map((style, index) => (
@@ -351,10 +484,10 @@ function App() {
                 </option>
               ))}
             </select>
-            <select onChange={(e) => setStyle(e.target.value)}>
-              {styles.map((style, index) => (
-                <option value={style.name} key={index}>
-                  {style.name}
+            <select onChange={(e) => setColour(e.target.value)}>
+              {colours.map((colour, index) => (
+                <option value={colour.name} key={index}>
+                  {colour.name}
                 </option>
               ))}
             </select>
@@ -368,6 +501,13 @@ function App() {
                 </option>
               ))}
             </select>
+            <select onChange={(e) => setSubject(e.target.value)}>
+              {subjects.map((subject, index) => (
+                <option value={subject.name} key={index}>
+                  {subject.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="check">
@@ -378,136 +518,32 @@ function App() {
                 </option>
               ))}
             </select>
-
-            {/* +
-                  " " +
-                  keyword +
-                  " " +
-                  medium +
-                  " " +
-                  style +
-                  " " +
-                  artist +
-                  " " + "#00" +
-                  count  */}
+            <select onChange={(e) => setPattern(e.target.value)}>
+              {patterns.map((pattern, index) => (
+                <option value={pattern.name} key={index}>
+                  {pattern.name}
+                </option>
+              ))}
+            </select>
           </div>
 
-       
-
-          {/* <div>
-            <button
-              onClick={handleChecked}
-              value="bird"
-              className={`button ${
-                active.includes(" bird") ? "activeButton" : ""
-              }`}
-            >
-              bird
-            </button>
-            <button
-              onClick={handleChecked}
-              value="insect"
-              className={`button ${
-                active.includes(" insect") ? "activeButton" : ""
-              }`}
-            >
-              insect
-            </button>
-            <button
-              onClick={handleChecked}
-              value="woman"
-              className={`button ${
-                active.includes(" woman") ? "activeButton" : ""
-              }`}
-            >
-              woman
-            </button>
-            <button
-              onClick={handleChecked}
-              value="beach"
-              className={`button ${
-                active.includes(" beach") ? "activeButton" : ""
-              }`}
-            >
-              beach
-            </button>
+          {/* Tab Inputs */}
+          <div className="tabs">
+            {subjects.map((subject, index) => (
+              <button
+                key={index}
+                onClick={handleChecked}
+                value={subject.name}
+                className={`button ${
+                  active.includes(" " + subject.name) ? "activeButton" : ""
+                }`}
+              >
+                {subject.name}
+              </button>
+            ))}
           </div>
 
-          <div>
-            <button
-              onClick={handleChecked}
-              value="tree"
-              className={`button ${
-                active.includes(" tree") ? "activeButton" : ""
-              }`}
-            >
-              tree
-            </button>
-            <button
-              onClick={handleChecked}
-              value="fruit"
-              className={`button ${
-                active.includes(" fruit") ? "activeButton" : ""
-              }`}
-            >
-              fruit
-            </button>
-            <button
-              onClick={handleChecked}
-              value="stripes"
-              className={`button ${
-                active.includes(" stripes") ? "activeButton" : ""
-              }`}
-            >
-              stripes
-            </button>
-            <button
-              onClick={handleChecked}
-              value="cyan"
-              className={`button ${
-                active.includes(" cyan") ? "activeButton" : ""
-              }`}
-            >
-              cyan
-            </button>
-          </div> */}
-
-
-      <div className="tabs">
-        {tabs.map((tab, index) => (
-       
-          <button
-              key={index}
-              onClick={handleChecked}
-              value={tab.name}
-              className={`button ${
-                active.includes(" " + tab.name) ? "activeButton" : ""
-              }`}
-            >
-              {tab.name}
-            </button>
-         
-        ))}
-        </div>
-        {/* <div className="">
-        {tabs.map((tab, index) => (
-       
-          <button
-              key={index}
-              onClick={handleChecked}
-              value={tab.name}
-              className={`button ${
-                active.includes(" " + tab.name) ? "activeButton" : ""
-              }`}
-            >
-              {tab.name}
-            </button>
-         
-        ))}
-        </div>
-         */}
-           
-
+          {/* Create Button */}
           {image ? (
             <input type="submit" value="Create"></input>
           ) : (
@@ -535,8 +571,9 @@ function App() {
           </p> */}
         </form>
 
+        {/* Main Image */}
         <div>
-          <div className="image">
+          {/* <div className="image">
             {!creating ? (
               <img
                 src={
@@ -549,8 +586,32 @@ function App() {
             ) : (
               <Spinner />
             )}
-          </div>
+          </div> */}
 
+<div className="image">
+          {!isWaiting && image ? (
+            <img src={image} alt="AI generated image" />
+          ) : isWaiting ? (
+            <div className="image__placeholder">
+              <Spinner animation="border" />
+              <p>{message}</p>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+
+        {!isWaiting && url && (
+        <p>
+          {/* View&nbsp;<a href={url} target="_blank" rel="noreferrer">Metadata</a> */}
+        </p>
+      )}
+
+
+
+
+
+          {/* Main Text */}
           {minting ? (
             <div>
               <br />
@@ -564,16 +625,16 @@ function App() {
           ) : (
             <div>
               <p>
-                {name ? <b>{name}&nbsp;</b> : "Title"}{" "}
+                {name ? <>{name}&nbsp;</> : "Title"}{" "}
                 <em>
                   &nbsp;"
-                  {description ? <b>{description}&nbsp;</b> : "description"}"
+                  {description ? <>{description}&nbsp;</> : "description"}"
                 </em>
               </p>
               <p>
-                &nbsp;{medium ? <b>{medium}&nbsp;</b> : "Medium, "}{" "}
-                {style ? <b>&nbsp;{style}&nbsp;-</b> : "Style - "}{" "}
-                {artist ? <b>&nbsp;{artist}&nbsp;</b> : "Artist"}{" "}
+                &nbsp;{medium ? <>{medium}&nbsp;</> : "Medium, "}{" "}
+                {style ? <>&nbsp;{style}&nbsp;-</> : "Style - "}{" "}
+                {artist ? <>&nbsp;{artist}&nbsp;</> : "Artist"}{" "}
               </p>
               {/* <p>
                 {" "}
@@ -584,26 +645,28 @@ function App() {
         </div>
       </div>
 
+      {/* Thumbnail History */}
       <div className="thumbnails">
         {thumbs
           .map((item, index) => (
             <div className="thumbnail" key={index}>
               <img src={item[0]} alt="AI thumbnail" />
-              {/* <div>
+              <div>
                 <p>
                   {item[1]}
-                  <em>"{item[2]}"</em>
+                  
                 </p>
-              </div> */}
+                <p><em>"{item[2]}"</em></p>
+              </div>
 
-              <p>
+              {/* <p>
                 View&nbsp;<a href={url}>Metadata</a>
-              </p>
+              </p> */}
             </div>
           ))
           .reverse()}
 
-{/* <div className="thumbnail" >
+        {/* <div className="thumbnail" >
               <img src={image} alt="AI thumbnail" />
            
 
@@ -611,6 +674,20 @@ function App() {
                 View&nbsp;<a href={url}>Metadata</a>
               </p>
             </div> */}
+      </div>
+
+      {/* Local Storage */}
+      <div className="thumbnails">
+        {items
+          .map((item, index) => (
+            <div className="thumbnail" key={index}>
+              <img src={item[0]} alt="AI thumbnail" />
+              <p>
+                View&nbsp;<a href={url}>Item</a>
+              </p>
+            </div>
+          ))
+          .reverse()}
       </div>
     </div>
   );

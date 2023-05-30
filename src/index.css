@@ -52,8 +52,8 @@ nav {
 }
 
 .nav__connect {
-  /* width: 150px;
-  height: 35px; */
+  width: 150px;
+  height: 35px;
   margin: 0 auto 8px auto;
 
   background-color: var(--clr-orange);
@@ -275,7 +275,7 @@ button:hover {
   width: 200px;
   height: 200px;
   border-radius: 6px;
-  margin: 10px;
+  margin: 10px 10px 0px 10px;
 }
 
 .image__placeholder {
