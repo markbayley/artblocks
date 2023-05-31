@@ -13,6 +13,11 @@ import NFT from "./abis/NFT.json";
 
 // Config
 import config from "./config.json";
+import Thumbnails from "./components/Thumbnails";
+import CreateButton from "./components/CreateButton";
+import Keywords from "./components/Keywords";
+import MainImage from "./components/MainImage";
+import InputFields from "./components/InputFields";
 
 function App() {
   const [provider, setProvider] = useState(null);
@@ -36,6 +41,8 @@ function App() {
   const [keyword, setKeyword] = useState([]);
   const [count, setCount] = useState(0);
 
+  const [title, setTitle] = useState("");
+
   const [creating, setCreating] = useState(null);
   const [minting, setMinting] = useState(null);
   const [active, setActive] = useState([]);
@@ -46,14 +53,13 @@ function App() {
   // Local Storage
   const storedItems = JSON.parse(localStorage.getItem("items"));
   const [items, setItems] = useState(storedItems);
-  // console.log(localStorage);
+ 
 
   useEffect(() => {
     localStorage.setItem("items", JSON.stringify(items));
   }, [items]);
 
   const loadBlockchainData = async () => {
-    console.log("Loading blockchain data...");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
 
@@ -74,10 +80,10 @@ function App() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    if (name === "" || description === "") {
-      window.alert("Please provide a name and description");
-      return;
-    }
+    // if (name === "" || description === "") {
+    //   window.alert("Please provide a name and description");
+    //   return;
+    // }
 
     setIsWaiting(true);
 
@@ -121,7 +127,7 @@ function App() {
           " " +
           subject +
           " " +
-          name +
+          title +
           " " +
           style +
           " " +
@@ -150,7 +156,7 @@ function App() {
     console.log("Creating Thumbnail data...");
     thumbs.push([
       img,
-      name,
+      title,
       description,
       style,
       artist,
@@ -169,6 +175,8 @@ function App() {
     console.log("items", items);
 
     setCreating(false);
+
+    console.log(localStorage);
 
     return data;
   };
@@ -425,8 +433,6 @@ function App() {
     { key: ["street", "beach", "face", "woman", "colorful", "hills"] },
   ];
 
-  console.log("words", words[0].key);
-
   // Toggle Buttons
   const handleChecked = (e) => {
     e.preventDefault();
@@ -459,324 +465,61 @@ function App() {
 
       <div className="form">
         <form onSubmit={submitHandler}>
-          {/* <input items={items} setItems={setItems} /> */}
+          <InputFields
+            setTitle={setTitle}
+            setDescription={setDescription}
+            setSubject={setSubject}
+            setMedium={setMedium}
+            setStyle={setStyle}
+            setColour={setColour}
+            setArtist={setArtist}
+            setPattern={setPattern}
+            subjects={subjects}
+            styles={styles}
+            mediums={mediums}
+            patterns={patterns}
+            artists={artists}
+            colours={colours}
+          />
 
-          {/* Text Inputs */}
-          <div className="tabs">
-            <input
-              required
-              type="text"
-              placeholder="NFT name..."
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-            ></input>
-            <input
-              required
-              type="text"
-              placeholder="NFT description..."
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-            ></input>
-          </div>
+          <Keywords
+            words={words}
+            subject={subject}
+            active={active}
+            handleChecked={handleChecked}
+          />
 
-          {/* Select inputs */}
-          <div className="check">
-          <select onChange={(e) => setSubject(e.target.value)}>
-              {subjects.map((subject, index) => (
-                <option value={subject.name} key={index}>
-                  {subject.name}
-                </option>
-              ))}
-            </select>
-
-
-
-
-            <select onChange={(e) => setColour(e.target.value)}>
-              {colours.map((colour, index) => (
-                <option value={colour.name} key={index}>
-                  {colour.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="check">
-            <select onChange={(e) => setMedium(e.target.value)}>
-              {mediums.map((medium, index) => (
-                <option value={medium.name} key={index}>
-                  {medium.name}
-                </option>
-              ))}
-            </select>
-            <select onChange={(e) => setStyle(e.target.value)}>
-              {styles.map((style, index) => (
-                <option value={style.name} key={index}>
-                  {style.name}
-                </option>
-              ))}
-            </select>
-           
-          </div>
-
-          <div className="check">
-            <select onChange={(e) => setArtist(e.target.value)}>
-              {artists.map((artist, index) => (
-                <option value={artist.name} key={index}>
-                  {artist.name}
-                </option>
-              ))}
-            </select>
-            <select onChange={(e) => setPattern(e.target.value)}>
-              {patterns.map((pattern, index) => (
-                <option value={pattern.name} key={index}>
-                  {pattern.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Tab Inputs */}
-          {subject === "Landscape" ? (
-            <div className="tabs">
-              {words[0].key.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={handleChecked}
-                  value={item}
-                  className={`button ${
-                    active.includes(" " + item) ? "activeButton" : ""
-                  }`}
-                >
-                  {/* {subject === "Seascape" ? item.keywords : "blank"} */}
-                  {/* {item.keywords.map((i, index) => (
-                  <div>{i}</div>
-                ))} */}
-                  {item}
-                </button>
-              ))}
-            </div>
-          ) : subject === "Portrait" ? (
-            <div className="tabs">
-              {words[1].key.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={handleChecked}
-                  value={item}
-                  className={`button ${
-                    active.includes(" " + item) ? "activeButton" : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          ) : subject === "Seascape" ? (
-            <div className="tabs">
-              {words[2].key.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={handleChecked}
-                  value={item}
-                  className={`button ${
-                    active.includes(" " + item) ? "activeButton" : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          ) : subject === "Figure" ? (
-            <div className="tabs">
-              {words[3].key.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={handleChecked}
-                  value={item}
-                  className={`button ${
-                    active.includes(" " + item) ? "activeButton" : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          ) : subject === "Fruit Bowl" ? (
-            <div className="tabs">
-              {words[4].key.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={handleChecked}
-                  value={item}
-                  className={`button ${
-                    active.includes(" " + item) ? "activeButton" : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div className="tabs">
-              {words[5].key.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={handleChecked}
-                  value={item}
-                  className={`button ${
-                    active.includes(" " + item) ? "activeButton" : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Create Button */}
-          {image ? (
-            <input type="submit" value="Create"></input>
-          ) : (
-            <div>
-              <input
-                type="submit"
-                value={creating ? "Creating Art..." : "Create"}
-              ></input>
-              {/* <input onSubmit={clearHandler}
-            type="submit"
-            value={"Clear"}
-          ></input> */}
-            </div>
-          )}
-          {/* {image ? (
-            <input
-              type="submit"
-              value={minting ? "Minting..." : "Mint"}
-            ></input>
-          ) : (
-            ""
-          )} */}
-          {/* <p>
-            View&nbsp;<a href={url}>Metadata</a>
-          </p> */}
+          <CreateButton image={image} creating={creating} />
         </form>
 
-        {/* Main Image */}
-        <div>
-          {/* <div className="image">
-            {!creating ? (
-              <img
-                src={
-                  image
-                    ? image
-                    : "https://www.thebeautyemporium.com.au/wp-content/uploads/woocommerce-placeholder-1024x1024.png"
-                }
-                alt="AI generated art"
-              />
-            ) : (
-              <Spinner />
-            )}
-          </div> */}
-
-          <div className="image">
-            {!isWaiting && image ? (
-              <img src={image} alt="AI generated image" />
-            ) : isWaiting ? (
-              <div className="image__placeholder">
-                <Spinner animation="border" />
-                <p>{message}</p>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
-
-          {!isWaiting && url && (
-            <p>
-              {/* View&nbsp;<a href={url} target="_blank" rel="noreferrer">Metadata</a> */}
-            </p>
-          )}
-
-          {/* Main Text */}
-          {minting ? (
-            <div>
-              <br />
-              <p>Minting block...</p>
-            </div>
-          ) : creating ? (
-            <div>
-              <br />
-              <p>Your Artblock is almost ready...</p>
-            </div>
-          ) : (
-            <div>
-              <p>
-                {name ? <>{name}&nbsp;</> : "Title"}{" "}
-                <em>
-                  &nbsp;"
-                  {description ? <>{description}&nbsp;</> : "description"}"
-                </em>
-              </p>
-              <p>
-                &nbsp;{medium ? <>{medium}&nbsp;</> : "Medium, "}{" "}
-                {style ? <>&nbsp;{style}&nbsp;-</> : "Style - "}{" "}
-                {artist ? <>&nbsp;{artist}&nbsp;</> : "Artist"}{" "}
-                {subject ? <>&nbsp;{subject}&nbsp;</> : "Subject"}{" "}
-              </p>
-              {/* <p>
-                {" "}
-                #{count}/10 &copy; {currentYear}{" "}
-              </p> */}
-            </div>
-          )}
-        </div>
+        <MainImage
+          isWaiting={isWaiting}
+          image={image}
+          message={message}
+          style={style}
+          medium={medium}
+          artist={artist}
+          subject={subject}
+          description={description}
+          minting={minting}
+          creating={creating}
+          url={url}
+          title={title}
+        />
       </div>
 
-      {/* Thumbnail History */}
-      <div className="thumbnails">
-        {thumbs
-          .map((item, index) => (
-            <div className="thumbnail" key={index}>
-              <img src={item[0]} alt="AI thumbnail" />
-              <div>
-                <p>{item[1]}</p>
-                <p>
-                  <em>"{item[2]}"</em>
-                </p>
-              </div>
-
-              {/* <p>
-                View&nbsp;<a href={url}>Metadata</a>
-              </p> */}
-            </div>
-          ))
-          .reverse()}
-
-        {/* <div className="thumbnail" >
-              <img src={image} alt="AI thumbnail" />
-           
-
-              <p>
-                View&nbsp;<a href={url}>Metadata</a>
-              </p>
-            </div> */}
-      </div>
-
-      {/* Local Storage */}
-      <div className="thumbnails">
-        {items
-          .map((item, index) => (
-            <div className="thumbnail" key={index}>
-              <img src={item[0]} alt="AI thumbnail" />
-              <p>
-                View&nbsp;<a href={url}>Item</a>
-              </p>
-            </div>
-          ))
-          .reverse()}
-      </div>
+      <Thumbnails url={url} items={items} thumbs={thumbs}   isWaiting={isWaiting}
+          image={image}
+          message={message}
+          style={style}
+          medium={medium}
+          artist={artist}
+          subject={subject}
+          description={description}
+          minting={minting}
+          creating={creating}
+     
+          title={title}/>
     </div>
   );
 }
