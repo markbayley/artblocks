@@ -188,7 +188,7 @@ button {
   border: 1px solid var(--clr-blue);
   border-radius: 25px;
 
-  font-size: 1.10em;
+  /* font-size: 1.10em; */
 }
 
 .checked {

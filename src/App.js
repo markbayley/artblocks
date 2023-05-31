@@ -17,15 +17,15 @@ import config from "./config.json";
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
-  const [nft, setNFT] = useState(null)
+  const [nft, setNFT] = useState(null);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [url, setURL] = useState(null);
 
-  const [message, setMessage] = useState("")
-  const [isWaiting, setIsWaiting] = useState(false)
+  const [message, setMessage] = useState("");
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const [style, setStyle] = useState("");
   const [artist, setArtist] = useState("");
@@ -52,50 +52,51 @@ function App() {
     localStorage.setItem("items", JSON.stringify(items));
   }, [items]);
 
-
   const loadBlockchainData = async () => {
     console.log("Loading blockchain data...");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
 
-    const network = await provider.getNetwork()
+    const network = await provider.getNetwork();
 
-    const nft = new ethers.Contract(config[network.chainId].nft.address, NFT, provider)
-    setNFT(nft)
+    const nft = new ethers.Contract(
+      config[network.chainId].nft.address,
+      NFT,
+      provider
+    );
+    setNFT(nft);
 
-    const name = await nft.name()
-    console.log("name", name)
+    const name = await nft.name();
+    console.log("name", name);
   };
 
+  // Form Request
+  const submitHandler = async (e) => {
+    e.preventDefault();
 
-    // Form Request
-    const submitHandler = async (e) => {
-      e.preventDefault();
+    if (name === "" || description === "") {
+      window.alert("Please provide a name and description");
+      return;
+    }
 
-      if (name === "" || description === "") {
-        window.alert("Please provide a name and description")
-        return
-      }
+    setIsWaiting(true);
 
-      setIsWaiting(true)
-    
-      const imageData = createImage();
-  
-      const url = await uploadImage(imageData);
+    const imageData = createImage();
 
-      await mintImage(url)
+    const url = await uploadImage(imageData);
 
-      setIsWaiting(false)
-      setMessage("")
+    await mintImage(url);
 
-      setMessage("success!")
-  
-      setCount(count + 1);
-      e.target.reset();
-      setKeyword([]);
-      setActive([]);
-    };
-  
+    setIsWaiting(false);
+    setMessage("");
+
+    setMessage("success!");
+
+    setCount(count + 1);
+    // e.target.reset();
+    setKeyword([]);
+    setActive([]);
+  };
 
   const createImage = async () => {
     setMessage("Generating Image...");
@@ -128,10 +129,10 @@ function App() {
           " " +
           medium +
           " " +
-          colour + 
+          colour +
           " " +
           pattern +
-          " " + 
+          " " +
           count,
         options: { wait_for_model: true },
       }),
@@ -158,14 +159,14 @@ function App() {
       keyword,
       pattern,
       count,
-      subject
+      subject,
     ]);
 
     setThumbs(thumbs);
     console.log("thumbs", thumbs);
 
-    setItems(thumbs)
-    console.log("items", items)
+    setItems(thumbs);
+    console.log("items", items);
 
     setCreating(false);
 
@@ -181,7 +182,7 @@ function App() {
     });
 
     // Send request to store image
-    setMessage("Sending request to store image");
+    setMessage("Sending request...");
     const { ipnft } = await nftstorage.store({
       image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
       name: name,
@@ -193,7 +194,7 @@ function App() {
       keyword: keyword,
       count: count,
       subject: subject,
-      pattern: pattern
+      pattern: pattern,
     });
 
     // Save the URL
@@ -210,18 +211,20 @@ function App() {
   };
 
   const mintImage = async (tokenURI) => {
-    setMessage("Waiting for Mint...")
+    setMessage("Click 'Confirm' in Metamask...");
 
-    const signer = await provider.getSigner()
-    const transaction = await nft.connect(signer).mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") })
-    await transaction.wait()
-  }
+    const signer = await provider.getSigner();
+    const transaction = await nft
+      .connect(signer)
+      .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
+    await transaction.wait();
+
+    console.log("transaction", transaction);
+  };
 
   useEffect(() => {
-    loadBlockchainData()
-  }, [])
-
-
+    loadBlockchainData();
+  }, []);
 
   useEffect(() => {
     loadBlockchainData();
@@ -406,20 +409,23 @@ function App() {
       name: "Seascape",
     },
     {
-      name: "Human Figure",
+      name: "Figure",
     },
     {
       name: "Fruit Bowl",
     },
-
-    // {
-    //   name: "turtle",
-    // },
-    // {
-    //   name: "dots",
-    // },
   ];
 
+  const words = [
+    { key: ["trees", "farm", "sky", "lake", "hills", "clouds"] },
+    { key: ["face", "smile", "dress", "jewels", "mouth", "family"] },
+    { key: ["boats", "fish", "beach", "cliffs", "island", "sand"] },
+    { key: ["man", "woman", "child", "slumped", "arms", "thin"] },
+    { key: ["apple", "pear", "fresh", "banana", "colorful", "wooden"] },
+    { key: ["street", "beach", "face", "woman", "colorful", "hills"] },
+  ];
+
+  console.log("words", words[0].key);
 
   // Toggle Buttons
   const handleChecked = (e) => {
@@ -477,13 +483,17 @@ function App() {
 
           {/* Select inputs */}
           <div className="check">
-            <select onChange={(e) => setStyle(e.target.value)}>
-              {styles.map((style, index) => (
-                <option value={style.name} key={index}>
-                  {style.name}
+          <select onChange={(e) => setSubject(e.target.value)}>
+              {subjects.map((subject, index) => (
+                <option value={subject.name} key={index}>
+                  {subject.name}
                 </option>
               ))}
             </select>
+
+
+
+
             <select onChange={(e) => setColour(e.target.value)}>
               {colours.map((colour, index) => (
                 <option value={colour.name} key={index}>
@@ -501,13 +511,14 @@ function App() {
                 </option>
               ))}
             </select>
-            <select onChange={(e) => setSubject(e.target.value)}>
-              {subjects.map((subject, index) => (
-                <option value={subject.name} key={index}>
-                  {subject.name}
+            <select onChange={(e) => setStyle(e.target.value)}>
+              {styles.map((style, index) => (
+                <option value={style.name} key={index}>
+                  {style.name}
                 </option>
               ))}
             </select>
+           
           </div>
 
           <div className="check">
@@ -528,20 +539,101 @@ function App() {
           </div>
 
           {/* Tab Inputs */}
-          <div className="tabs">
-            {subjects.map((subject, index) => (
-              <button
-                key={index}
-                onClick={handleChecked}
-                value={subject.name}
-                className={`button ${
-                  active.includes(" " + subject.name) ? "activeButton" : ""
-                }`}
-              >
-                {subject.name}
-              </button>
-            ))}
-          </div>
+          {subject === "Landscape" ? (
+            <div className="tabs">
+              {words[0].key.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={handleChecked}
+                  value={item}
+                  className={`button ${
+                    active.includes(" " + item) ? "activeButton" : ""
+                  }`}
+                >
+                  {/* {subject === "Seascape" ? item.keywords : "blank"} */}
+                  {/* {item.keywords.map((i, index) => (
+                  <div>{i}</div>
+                ))} */}
+                  {item}
+                </button>
+              ))}
+            </div>
+          ) : subject === "Portrait" ? (
+            <div className="tabs">
+              {words[1].key.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={handleChecked}
+                  value={item}
+                  className={`button ${
+                    active.includes(" " + item) ? "activeButton" : ""
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          ) : subject === "Seascape" ? (
+            <div className="tabs">
+              {words[2].key.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={handleChecked}
+                  value={item}
+                  className={`button ${
+                    active.includes(" " + item) ? "activeButton" : ""
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          ) : subject === "Figure" ? (
+            <div className="tabs">
+              {words[3].key.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={handleChecked}
+                  value={item}
+                  className={`button ${
+                    active.includes(" " + item) ? "activeButton" : ""
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          ) : subject === "Fruit Bowl" ? (
+            <div className="tabs">
+              {words[4].key.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={handleChecked}
+                  value={item}
+                  className={`button ${
+                    active.includes(" " + item) ? "activeButton" : ""
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="tabs">
+              {words[5].key.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={handleChecked}
+                  value={item}
+                  className={`button ${
+                    active.includes(" " + item) ? "activeButton" : ""
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Create Button */}
           {image ? (
@@ -588,28 +680,24 @@ function App() {
             )}
           </div> */}
 
-<div className="image">
-          {!isWaiting && image ? (
-            <img src={image} alt="AI generated image" />
-          ) : isWaiting ? (
-            <div className="image__placeholder">
-              <Spinner animation="border" />
-              <p>{message}</p>
-            </div>
-          ) : (
-            <></>
+          <div className="image">
+            {!isWaiting && image ? (
+              <img src={image} alt="AI generated image" />
+            ) : isWaiting ? (
+              <div className="image__placeholder">
+                <Spinner animation="border" />
+                <p>{message}</p>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+
+          {!isWaiting && url && (
+            <p>
+              {/* View&nbsp;<a href={url} target="_blank" rel="noreferrer">Metadata</a> */}
+            </p>
           )}
-        </div>
-
-        {!isWaiting && url && (
-        <p>
-          {/* View&nbsp;<a href={url} target="_blank" rel="noreferrer">Metadata</a> */}
-        </p>
-      )}
-
-
-
-
 
           {/* Main Text */}
           {minting ? (
@@ -635,6 +723,7 @@ function App() {
                 &nbsp;{medium ? <>{medium}&nbsp;</> : "Medium, "}{" "}
                 {style ? <>&nbsp;{style}&nbsp;-</> : "Style - "}{" "}
                 {artist ? <>&nbsp;{artist}&nbsp;</> : "Artist"}{" "}
+                {subject ? <>&nbsp;{subject}&nbsp;</> : "Subject"}{" "}
               </p>
               {/* <p>
                 {" "}
@@ -652,11 +741,10 @@ function App() {
             <div className="thumbnail" key={index}>
               <img src={item[0]} alt="AI thumbnail" />
               <div>
+                <p>{item[1]}</p>
                 <p>
-                  {item[1]}
-                  
+                  <em>"{item[2]}"</em>
                 </p>
-                <p><em>"{item[2]}"</em></p>
               </div>
 
               {/* <p>
