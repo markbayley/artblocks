@@ -76,6 +76,22 @@ nav {
   transition: all 250ms ease;
 }
 
+select.nav__menu  {
+  padding: 0px 0px 0px 25px;
+  outline: none;
+}
+
+#dropdown-basic {
+   border-radius: 30px;
+}
+
+#dropdown-basic:hover {
+  border-radius: 30px;
+  background-color: var(--clr-blue-2);
+}
+
+
+
 .nav__connect:hover {
   background-color: var(--clr-blue-2);
 }
@@ -286,10 +302,11 @@ button:hover {
   align-items: center;
   border-top: 1px solid grey;
   margin: 0px 25px 0px 35px;
+  height: auto;
 }
 
 .thumbnail {
-  /* border: 1px solid grey; */
+  border: 1px solid grey;
   /* display: flex;
   flex-direction: column; */
   text-align: center;

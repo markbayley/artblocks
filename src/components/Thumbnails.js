@@ -16,8 +16,9 @@ const Thumbnails = ({ thumbs }) => {
           thumbs.map((item, index) => (
             <>
               <button className="icon" onClick={() => setLgShow(true)}>
-                <div className="thumbnail" key={index}>
+                <div className="thumbnail">
                   <img
+                   key={index}
                     src={item[0]}
                     alt="AI thumbnail"
                     onClick={() => {
