@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CreateButton = ({image, creating }) => {
+const CreateButton = ({image, creating, isWaiting }) => {
   return (
        <>
          {image ? (

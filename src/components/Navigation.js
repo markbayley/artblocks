@@ -11,7 +11,7 @@ const Navigation = ({ account, setAccount }) => {
     
         <nav>
             <div className='nav__brand'>
-                <h1>ArtBlocks</h1>
+                <h1>Artblocks</h1>
             </div>
             {/* <div className='nav__brand'>
                  <h6>Home</h6>

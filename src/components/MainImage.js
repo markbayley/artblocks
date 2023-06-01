@@ -64,7 +64,7 @@ const MainImage = ({
           onClick={() => setLgShow(true)}
         >
           {!isWaiting && image ? (
-            <img src={image} alt="AI generated image" />
+            <img src={image} alt="AI generated image"/>
           ) : isWaiting ? (
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "350px", height: "350px"}}>
               <Spinner animation="border" />&nbsp;

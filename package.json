@@ -20,6 +20,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "predeploy" : "npm run build",
+    "deploy" : "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -55,6 +57,7 @@
     "@types/mocha": "^9.1.0",
     "chai": "^4.2.0",
     "ethers": "^5.7.2",
+    "gh-pages": "^5.0.0",
     "hardhat": "^2.12.5",
     "hardhat-gas-reporter": "^1.0.8",
     "solidity-coverage": "^0.8.1",

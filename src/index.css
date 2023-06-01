@@ -91,7 +91,6 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-
   min-height: 420px;
 }
 
@@ -100,10 +99,7 @@ form {
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
-
   margin: 0 25px;
-
- 
 }
 
 form input[type="text"] {
@@ -161,8 +157,6 @@ select {
   border: 1px solid var(--clr-blue);
   width: 100%;
   margin: 0px 10px 0px 0px;
-
-
 }
 
 .check {
@@ -171,7 +165,6 @@ select {
   justify-content: space-between;
   align-items: center;
   margin-top: 15px;
- 
 }
 
 
@@ -277,17 +270,13 @@ button:hover {
   margin: 0 25px;
   border: 3px solid var(--clr-blue);
   border-radius: 4px;
-
   overflow: hidden;
-
 }
 
 .image img {
   width: 350px;
   height: 350px;
   border-radius: 6px;
-
- 
 }
 
 .thumbnails {
@@ -297,7 +286,6 @@ button:hover {
   align-items: center;
   border-top: 1px solid grey;
   margin: 0px 25px 0px 35px;
-  
 }
 
 .thumbnail {
@@ -305,7 +293,6 @@ button:hover {
   /* display: flex;
   flex-direction: column; */
   text-align: center;
-
 }
 
 
@@ -329,6 +316,14 @@ button:hover {
 
 .tabs {
   padding-top: 5px;
+}
+
+.text__placeholder{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  width: 90vw;
 }
 
 /* ------------------------------------------------------ */

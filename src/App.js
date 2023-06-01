@@ -19,20 +19,18 @@ import Keywords from "./components/Keywords";
 import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
 
-
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [nft, setNFT] = useState(null);
 
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+
   const [image, setImage] = useState(null);
   const [url, setURL] = useState(null);
 
-  const [message, setMessage] = useState("");
-  const [isWaiting, setIsWaiting] = useState(false);
-
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [style, setStyle] = useState("");
   const [artist, setArtist] = useState("");
   const [medium, setMedium] = useState("");
@@ -42,19 +40,19 @@ function App() {
   const [keyword, setKeyword] = useState([]);
   const [count, setCount] = useState(0);
 
-  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+  const [isWaiting, setIsWaiting] = useState(false);
 
-  const [creating, setCreating] = useState(null);
-  const [minting, setMinting] = useState(null);
-  const [active, setActive] = useState([]);
+  const [creating, setCreating] = useState(false);
+  const [minting, setMinting] = useState(false);
+  
   const currentYear = new Date().getFullYear();
-
+  const [active, setActive] = useState([]);
   const [thumbs, setThumbs] = useState([]);
 
   // Local Storage
   const storedItems = JSON.parse(localStorage.getItem("items"));
   const [items, setItems] = useState(storedItems);
- 
 
   useEffect(() => {
     localStorage.setItem("items", JSON.stringify(items));
@@ -81,28 +79,20 @@ function App() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    // if (name === "" || description === "") {
-    //   window.alert("Please provide a name and description");
-    //   return;
-    // }
-
     setIsWaiting(true);
 
     const imageData = createImage();
-
     const url = await uploadImage(imageData);
 
     await mintImage(url);
 
-    setIsWaiting(false);
     setMessage("");
-
     setMessage("success!");
-
     setCount(count + 1);
     // e.target.reset();
     setKeyword([]);
     setActive([]);
+    setIsWaiting(false);
   };
 
   const createImage = async () => {
@@ -490,7 +480,11 @@ function App() {
             handleChecked={handleChecked}
           />
 
-          <CreateButton image={image} creating={creating} />
+          <CreateButton
+            image={image}
+            creating={creating}
+            isWaitng={isWaiting}
+          />
         </form>
 
         <MainImage
@@ -509,19 +503,22 @@ function App() {
         />
       </div>
 
-      <Thumbnails url={url} items={items} thumbs={thumbs} isWaiting={isWaiting}
-          image={image}
-          message={message}
-          style={style}
-          medium={medium}
-          artist={artist}
-          subject={subject}
-          description={description}
-          minting={minting}
-          creating={creating}
-     
-          title={title}/>
-  
+      <Thumbnails
+        url={url}
+        items={items}
+        thumbs={thumbs}
+        isWaiting={isWaiting}
+        image={image}
+        message={message}
+        style={style}
+        medium={medium}
+        artist={artist}
+        subject={subject}
+        description={description}
+        minting={minting}
+        creating={creating}
+        title={title}
+      />
     </div>
   );
 }

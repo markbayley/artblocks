@@ -6,14 +6,14 @@ import { Button } from "react-bootstrap";
 
 const Thumbnails = ({ thumbs }) => {
   const [lgShow, setLgShow] = useState(false);
-  const [modalData, setModalData] = useState(null);
+  const [modalData, setModalData] = useState([]);
 
   return (
     <>
       <div className="heading">My Artblocks</div>
       <div className="thumbnails">
-        {thumbs
-          .map((item, index) => (
+        {thumbs.length === 0  ? <div className="text__placeholder">No Artblocks minted</div> :
+          thumbs.map((item, index) => (
             <>
               <button className="icon" onClick={() => setLgShow(true)}>
                 <div className="thumbnail" key={index}>
