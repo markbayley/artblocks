@@ -208,13 +208,22 @@ button {
 }
 
 .icon {
-  width: 0px;
-  height: 0px;
+  width: 200px;
   background-color: white;
-  /* border: 1px solid white; */
+  border: 1px solid white; 
   padding: 0px;
   margin: 0px;
 }
+
+.icon:hover {
+  width: 200px;
+  color: black;
+  background-color: white;
+  border: 1px solid white; 
+  padding: 0px;
+  margin: 0px;
+}
+
 
 
 .checked {

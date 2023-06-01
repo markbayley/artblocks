@@ -19,6 +19,7 @@ import Keywords from "./components/Keywords";
 import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
 
+
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
@@ -508,7 +509,7 @@ function App() {
         />
       </div>
 
-      <Thumbnails url={url} items={items} thumbs={thumbs}   isWaiting={isWaiting}
+      <Thumbnails url={url} items={items} thumbs={thumbs} isWaiting={isWaiting}
           image={image}
           message={message}
           style={style}
@@ -520,6 +521,7 @@ function App() {
           creating={creating}
      
           title={title}/>
+  
     </div>
   );
 }

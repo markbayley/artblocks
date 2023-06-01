@@ -61,7 +61,6 @@ const MainImage = ({
       <div className="image">
         <button
           className="icon"
-          style={{ zIndex: 10 }}
           onClick={() => setLgShow(true)}
         >
           {!isWaiting && image ? (
