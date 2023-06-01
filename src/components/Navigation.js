@@ -4,11 +4,14 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 const Navigation = ({ account, setAccount }) => {
   const connectHandler = async () => {
+
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
     const account = ethers.utils.getAddress(accounts[0]);
-    setAccount(account);
+   
+    setAccount(account) 
+ 
   };
 
   return (
@@ -16,12 +19,7 @@ const Navigation = ({ account, setAccount }) => {
       <div className="nav__brand">
         <h1>Artblocks</h1>
       </div>
-      {/* <div className='nav__brand'>
-                 <h6>Home</h6>
-                <h6>About</h6>
-                <h6>Store</h6>
-                <h6>Contact</h6> 
-            </div> */}
+
 
       {account ? (
         <div style={{ display: "flex" }}>
@@ -44,13 +42,7 @@ const Navigation = ({ account, setAccount }) => {
         </div>
       ) : (
         <div style={{ display: "flex" }}>
-          {/* <button
-            type="button"
-            className="nav__menu"
-               onClick={connectHandler}
-          >
-            Menu
-          </button> */}
+        
             <Dropdown>
             <Dropdown.Toggle  className="nav__menu">
               Menu
@@ -68,7 +60,7 @@ const Navigation = ({ account, setAccount }) => {
             className="nav__connect"
             onClick={connectHandler}
           >
-            Connect
+          Connect
           </button>
         </div>
       )}

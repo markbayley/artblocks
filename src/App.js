@@ -202,10 +202,6 @@ function App() {
     setURL(url);
     setMinting(false);
 
-    console.log("active", active);
-    console.log("keyword", keyword);
-    console.log("url", url);
-
     return url;
   };
 
@@ -438,10 +434,12 @@ function App() {
 
   };
 
+  console.log("account", provider)
+
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
-
+     <div className="provider"> { provider ? "" : "Install MetaMask to Connect" }</div>
       <div className="form">
         <form onSubmit={submitHandler}>
           <InputFields

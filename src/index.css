@@ -346,6 +346,14 @@ button:hover {
   width: 90vw;
 }
 
+.provider {
+  display: flex;
+  justify-content: end;
+  margin-right: 25px;
+  font-size: 0.8em;
+  color:#f81717;
+}
+
 /* ------------------------------------------------------ */
 /* -- TEXT -- */
 p {
