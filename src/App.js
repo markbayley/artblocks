@@ -428,27 +428,15 @@ function App() {
   const handleChecked = (e) => {
     e.preventDefault();
 
-    // setDescription((prevArr) => [...prevArr, " " + e.target.value]);
-
-    // active.push(e.target.value)
-    // setActive(active + ", " + e.target.value)
     setActive((prevArr) =>
       prevArr.includes(e.target.value)
         ? [...prevArr.pop()]
         : [...prevArr, " " + e.target.value]
     );
 
-    // setKeyword(keyword + ", " + e.currentTarget.value)
-
     setKeyword((prevArr) => [...prevArr, " " + e.target.value]);
 
-    // keyword.slice(1)
-    // keyword.push(e.target.value)
   };
-
-  // const clearHandler = async (e) => {
-  //   e.target.reset();
-  // };
 
   return (
     <div>
