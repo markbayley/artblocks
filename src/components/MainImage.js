@@ -100,7 +100,7 @@ const MainImage = ({
       
       ) : (
       
-        <>{title ? title : "Title"}&nbsp;"{description ? description : "description"}"</>
+        <p className="title">{title ? title : "Title"}&nbsp;"{description ? description : "description"}"</p>
   
       )}
 

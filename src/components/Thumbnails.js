@@ -15,7 +15,7 @@ const Thumbnails = ({ thumbs }) => {
         {thumbs.length === 0  ? <div className="text__placeholder">No Artblocks minted</div> :
           thumbs.map((item, index) => (
             <>
-              <button className="icon" onClick={() => setLgShow(true)}>
+              <div className="" onClick={() => setLgShow(true)}>
                 <div className="thumbnail">
                   <img
                    key={index}
@@ -31,7 +31,7 @@ const Thumbnails = ({ thumbs }) => {
                     <em>"{item[2]}"</em>
                   </>
                 </div>
-              </button>
+              </div>
             </>
           ))
           .reverse()}

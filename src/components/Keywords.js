@@ -5,8 +5,10 @@ const Keywords = ({words, subject, active, handleChecked}) => {
     <>
     {/* <div className='title'>Keywords</div> */}
      {/* Tab Inputs */}
+     <div className='title'>Keywords</div>
      {subject === "Landscape" ? (
         <div className="tabs">
+      
           {words[0].key.map((item, index) => (
             <button
               key={index}
