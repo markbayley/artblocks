@@ -7,6 +7,7 @@ const InputFields = ({
   setMedium,
   setStyle,
   setColour,
+  setColour2,
   setArtist,
   setPattern,
   subjects,
@@ -15,6 +16,7 @@ const InputFields = ({
   patterns,
   artists,
   colours,
+
 }) => {
   return (
     <>
@@ -28,7 +30,7 @@ const InputFields = ({
           }}
         ></input>
         <input
-          required
+          // required
           type="text"
           placeholder="NFT description..."
           onChange={(e) => {
@@ -38,7 +40,7 @@ const InputFields = ({
       </div>
 
       <div className="check">
-        <select onChange={(e) => setSubject(e.target.value)}>
+        <select onChange={(e) => setSubject(e.target.value)} style={{width: "350px" }} >
           {subjects.map((subject, index) => (
             <option value={subject.name} key={index}>
               {subject.name}
@@ -46,10 +48,17 @@ const InputFields = ({
           ))}
         </select>
 
-        <select onChange={(e) => setColour(e.target.value)}>
+        <select onChange={(e) => setColour2(e.target.value)}  style={{width: "170px"}}>
           {colours.map((colour, index) => (
             <option value={colour.name} key={index}>
               {colour.name}
+            </option>
+          ))}
+        </select>
+        <select  onChange={(e) => setColour(e.target.value)} style={{width: "170px"}}>
+          {colours.map((colour, index) => (
+            <option value={colour.name} key={index}>
+            {colour.name} 
             </option>
           ))}
         </select>

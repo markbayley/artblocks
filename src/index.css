@@ -102,6 +102,10 @@ select:active, select:hover {
   background-color: var(--clr-blue-2);
 }
 
+.button:hover {
+  background-color: var(--clr-blue-2);
+}
+
 /* ------------------------------------------------------ */
 /* -- FORM -- */
 
@@ -121,7 +125,7 @@ form {
 }
 
 form input[type="text"] {
-  width: 300px;
+  width: 350px;
   /* height: 50px; */
   margin: 10px 10px 0px 0px;
   padding: 10px 10px 5px 10px;
@@ -189,11 +193,12 @@ select {
 .activeButton {
   background-color: var(--clr-blue);
   color: white;
+  height: 39px;
 }
 
-.inactiveButton {
+/* .inactiveButton {
   background-color: white;
-}
+} */
 
 .title {
   margin: 10px 0px 0px 0px;
@@ -212,10 +217,9 @@ button {
   height: 40px;
   margin: 5px 5px 5px 0px;
   padding: 5px;
-  background-color: white;
+  background-color: rgb(240, 237, 237);
   border: 1px solid var(--clr-blue);
   border-radius: 25px;
-
 }
 
 .icon {
@@ -293,7 +297,13 @@ button:hover {
 .btn {
   background-color: var(--clr-blue);
   color: #fff;
- 
+}
+
+.button {
+  /* padding: 10px 15px; */
+  /* background-color: #eee; */
+  border: 1px solid #eee;
+  margin: 10px;
 }
 
 /* ------------------------------------------------------ */
@@ -357,7 +367,7 @@ button:hover {
 }
 
 .tabs {
-  padding-top: 5px;
+  /* padding-top: 5px; */
 }
 
 .text__placeholder{

@@ -1,6 +1,24 @@
 import React from 'react'
 
 const Keywords = ({words, subject, active, handleChecked}) => {
+
+  // merge two arrays
+  let arr0 = [...active, ...words[0]];
+  let arr1 = [...active, ...words[1]];
+  let arr2 = [...active, ...words[2]];
+  let arr3 = [...active, ...words[3]];
+  let arr4 = [...active, ...words[4]];
+  let arr5 = [...active, ...words[5]];
+
+  // removing duplicate
+  let keywords0 = [...new Set(arr0.slice(0, 6))];
+  let keywords1 = [...new Set(arr1.slice(0, 6))];
+  let keywords2 = [...new Set(arr2.slice(0, 6))];
+  let keywords3 = [...new Set(arr3.slice(0, 6))];
+  let keywords4 = [...new Set(arr4.slice(0, 6))];
+  let keywords5 = [...new Set(arr5.slice(0, 6))];
+
+
   return (
     <>
     {/* <div className='title'>Keywords</div> */}
@@ -9,13 +27,13 @@ const Keywords = ({words, subject, active, handleChecked}) => {
      {subject === "Landscape" ? (
         <div className="tabs">
       
-          {words[0].key.map((item, index) => (
+          {keywords0.map((item, index) => (
             <button
               key={index}
               onClick={handleChecked}
               value={item}
               className={`button ${
-                active.includes(" " + item) ? "activeButton" : ""
+                active.includes(item) ? "activeButton" : ""
               }`}
             >
               {item}
@@ -24,13 +42,13 @@ const Keywords = ({words, subject, active, handleChecked}) => {
         </div>
       ) : subject === "Portrait" ? (
         <div className="tabs">
-          {words[1].key.map((item, index) => (
+          {keywords1.map((item, index) => (
             <button
               key={index}
               onClick={handleChecked}
               value={item}
               className={`button ${
-                active.includes(" " + item) ? "activeButton" : ""
+                active.includes(item) ? "activeButton" : ""
               }`}
             >
               {item}
@@ -39,13 +57,13 @@ const Keywords = ({words, subject, active, handleChecked}) => {
         </div>
       ) : subject === "Seascape" ? (
         <div className="tabs">
-          {words[2].key.map((item, index) => (
+          {keywords2.map((item, index) => (
             <button
               key={index}
               onClick={handleChecked}
               value={item}
               className={`button ${
-                active.includes(" " + item) ? "activeButton" : ""
+                active.includes(item) ? "activeButton" : ""
               }`}
             >
               {item}
@@ -54,13 +72,13 @@ const Keywords = ({words, subject, active, handleChecked}) => {
         </div>
       ) : subject === "Figure" ? (
         <div className="tabs">
-          {words[3].key.map((item, index) => (
+          {keywords3.map((item, index) => (
             <button
               key={index}
               onClick={handleChecked}
               value={item}
               className={`button ${
-                active.includes(" " + item) ? "activeButton" : ""
+                active.includes(item) ? "activeButton" : ""
               }`}
             >
               {item}
@@ -69,13 +87,13 @@ const Keywords = ({words, subject, active, handleChecked}) => {
         </div>
       ) : subject === "Fruit Bowl" ? (
         <div className="tabs">
-          {words[4].key.map((item, index) => (
+          {keywords4.map((item, index) => (
             <button
               key={index}
               onClick={handleChecked}
               value={item}
               className={`button ${
-                active.includes(" " + item) ? "activeButton" : ""
+                active.includes(item) ? "activeButton" : ""
               }`}
             >
               {item}
@@ -84,13 +102,13 @@ const Keywords = ({words, subject, active, handleChecked}) => {
         </div>
       ) : (
         <div className="tabs">
-          {words[5].key.map((item, index) => (
+          {keywords5.map((item, index) => (
             <button
               key={index}
               onClick={handleChecked}
               value={item}
               className={`button ${
-                active.includes(" " + item) ? "activeButton" : ""
+                active.includes(item) ? "activeButton" : ""
               }`}
             >
               {item}

@@ -36,6 +36,7 @@ function App() {
   const [artist, setArtist] = useState("");
   const [medium, setMedium] = useState("");
   const [colour, setColour] = useState("");
+  const [colour2, setColour2] = useState("");
   const [pattern, setPattern] = useState("");
   const [subject, setSubject] = useState("");
   const [keyword, setKeyword] = useState([]);
@@ -46,9 +47,12 @@ function App() {
 
   const [creating, setCreating] = useState(false);
   const [minting, setMinting] = useState(false);
+  const [minted, setMinted] = useState(false);
   
   const currentYear = new Date().getFullYear();
   const [active, setActive] = useState([]);
+
+  const [thumb, setThumb] = useState([]);
   const [thumbs, setThumbs] = useState([]);
 
   // Local Storage
@@ -79,21 +83,23 @@ function App() {
   // Form Request
   const submitHandler = async (e) => {
     e.preventDefault();
-
+   
     setIsWaiting(true);
 
     const imageData = createImage();
+  
     const url = await uploadImage(imageData);
-
+   
     await mintImage(url);
-
+    setIsWaiting(false);
     setMessage("");
-    setMessage("success!");
+  
+   
     setCount(count + 1);
     // e.target.reset();
     setKeyword([]);
     setActive([]);
-    setIsWaiting(false);
+   
   };
 
   const createImage = async () => {
@@ -129,6 +135,8 @@ function App() {
           " " +
           colour +
           " " +
+          colour2 +
+          " " +
           pattern +
           " " +
           count,
@@ -146,6 +154,22 @@ function App() {
     setImage(img);
 
     console.log("Creating Thumbnail data...");
+
+    // setThumb([
+    //   img,
+    //   title,
+    //   description,
+    //   style,
+    //   artist,
+    //   medium,
+    //   colour,
+    //   colour2,
+    //   keyword,
+    //   pattern,
+    //   count,
+    //   subject,
+    // ]);
+
     thumbs.push([
       img,
       title,
@@ -160,11 +184,19 @@ function App() {
       subject,
     ]);
 
+  
+    // setThumbs((prevArr) => [...prevArr, thumb]) 
+  
+ 
 
+
+ 
     console.log("thumbs", thumbs);
-
+   
     setItems(thumbs);
     console.log("items", items);
+
+    
 
     setCreating(false);
 
@@ -191,6 +223,7 @@ function App() {
       artist: artist,
       medium: medium,
       colour: colour,
+      colour2: colour2,
       keyword: keyword,
       count: count,
       subject: subject,
@@ -201,7 +234,7 @@ function App() {
     setMessage("Saving the URL");
     const url = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
     setURL(url);
-    setMinting(false);
+
 
     return url;
   };
@@ -214,17 +247,17 @@ function App() {
       .connect(signer)
       .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
     await transaction.wait();
+  
 
-    console.log("transaction", transaction);
   };
+  console.log("thumbs", thumbs);
 
   useEffect(() => {
     loadBlockchainData();
   }, []);
 
-  useEffect(() => {
-    loadBlockchainData();
-  }, []);
+ 
+
 
   const artists = [
     {
@@ -413,25 +446,35 @@ function App() {
   ];
 
   const words = [
-    { key: ["trees", "farm", "sky", "lake", "hills", "clouds"] },
-    { key: ["face", "smile", "dress", "jewels", "mouth", "family"] },
-    { key: ["boats", "fish", "beach", "cliffs", "island", "sand"] },
-    { key: ["man", "woman", "child", "slumped", "arms", "thin"] },
-    { key: ["apple", "pear", "fresh", "banana", "colorful", "wooden"] },
-    { key: ["street", "beach", "face", "woman", "colorful", "hills"] },
+    ["trees", "farm", "sky", "lake", "hills", "clouds"] ,
+    ["face", "smile", "dress", "jewels", "mouth", "family"] ,
+     ["boats", "fish", "beach", "cliffs", "island", "sand"] ,
+     ["man", "woman", "child", "slumped", "arms", "thin"] ,
+     ["apple", "pear", "fresh", "banana", "colorful", "wooden"] ,
+    ["street", "beach", "face", "woman", "colorful", "hills"] 
   ];
 
   // Toggle Buttons
   const handleChecked = (e) => {
     e.preventDefault();
 
-    setActive((prevArr) => [...prevArr, " " + e.target.value]);
-    
-    setKeyword((prevArr) => [...prevArr, " " + e.target.value]);
+    if (active.includes(e.target.value)) {
+      const newactive = active.filter(function (item) {
+        return item !== e.target.value;
+    });
 
+    setActive(newactive);
+  
+    } else {
+
+      setActive((prevArr) => [...prevArr, e.target.value])
+    }
+
+    // setKeyword((prevArr) => [...prevArr, " " + e.target.value]);
+ 
   };
 
-
+  console.log("active", active)
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
@@ -453,6 +496,7 @@ function App() {
             patterns={patterns}
             artists={artists}
             colours={colours}
+            setColour2={setColour2}
           />
 
           <Keywords
@@ -462,8 +506,8 @@ function App() {
             handleChecked={handleChecked}
           />
 
-          <Toggles   words={words}
-            subject={subject}/>
+          {/* <Toggles   words={words}
+            subject={subject}/> */}
 
           <CreateButton
             image={image}
