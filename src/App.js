@@ -18,6 +18,7 @@ import CreateButton from "./components/CreateButton";
 import Keywords from "./components/Keywords";
 import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
+import Toggles from "./components/Toggles";
 
 function App() {
   const [provider, setProvider] = useState(null);
@@ -159,7 +160,7 @@ function App() {
       subject,
     ]);
 
-    setThumbs(thumbs);
+
     console.log("thumbs", thumbs);
 
     setItems(thumbs);
@@ -424,17 +425,12 @@ function App() {
   const handleChecked = (e) => {
     e.preventDefault();
 
-    setActive((prevArr) =>
-      prevArr.includes(e.target.value)
-        ? [...prevArr.pop()]
-        : [...prevArr, " " + e.target.value]
-    );
-
+    setActive((prevArr) => [...prevArr, " " + e.target.value]);
+    
     setKeyword((prevArr) => [...prevArr, " " + e.target.value]);
 
   };
 
-  console.log("account", provider)
 
   return (
     <div>
@@ -465,6 +461,9 @@ function App() {
             active={active}
             handleChecked={handleChecked}
           />
+
+          <Toggles   words={words}
+            subject={subject}/>
 
           <CreateButton
             image={image}
@@ -504,6 +503,7 @@ function App() {
         minting={minting}
         creating={creating}
         title={title}
+        setThumbs={setThumbs}
       />
     </div>
   );

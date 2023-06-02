@@ -245,33 +245,55 @@ button {
   background-color: white;
 }
 
+/* Tabs */
 
 button:hover {
   background-color: var(--clr-blue);
   color: white;
   transition: all 250ms ease;
-
 }
 
 .button1 {
-  background-color: var(--clr-blue);
+  background-color: var(--clr-blue-2);
   color: #fff;
+  height: 39px;
+  width: 95px;
 }
 .button2 {
-  background-color: var(--clr-blue);
+  background-color: var(--clr-blue-2);
   color: #fff;
+  height: 39px;
+  width: 95px;
 }
 .button3 {
-  background-color: var(--clr-blue);
+  background-color: var(--clr-blue-2);
   color: #fff;
+  height: 39px;
+  width: 95px;
 }
 .button4 {
-  background-color: var(--clr-blue);
+  background-color: var(--clr-blue-2);
   color: #fff;
+  height: 39px;
+  width: 95px;
+}
+.button5 {
+  background-color: var(--clr-blue-2);
+  color: #fff;
+  height: 39px;
+  width: 95px;
+}
+.button6 {
+  background-color: var(--clr-blue-2);
+  color: #fff;
+  height: 39px;
+  width: 95px;
+ 
 }
 .btn {
   background-color: var(--clr-blue);
   color: #fff;
+ 
 }
 
 /* ------------------------------------------------------ */
