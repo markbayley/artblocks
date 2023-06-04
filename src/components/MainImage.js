@@ -10,8 +10,6 @@ const MainImage = ({
   description,
   style,
   medium,
-  artist,
-  subject,
   image,
   minting,
   creating,

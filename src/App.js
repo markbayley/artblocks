@@ -5,7 +5,6 @@ import { ethers } from "ethers";
 import axios from "axios";
 
 // Components
-import Spinner from "react-bootstrap/Spinner";
 import Navigation from "./components/Navigation";
 
 // ABIs
@@ -18,7 +17,7 @@ import CreateButton from "./components/CreateButton";
 import Keywords from "./components/Keywords";
 import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
-import Toggles from "./components/Toggles";
+
 
 function App() {
   const [provider, setProvider] = useState(null);
@@ -39,7 +38,8 @@ function App() {
   const [colour2, setColour2] = useState("");
   const [pattern, setPattern] = useState("");
   const [subject, setSubject] = useState("");
-  const [keyword, setKeyword] = useState([]);
+
+  const [keyword, setKeyword] = useState("");
   const [count, setCount] = useState(0);
 
   const [message, setMessage] = useState("");
@@ -50,7 +50,11 @@ function App() {
   const [minted, setMinted] = useState(false);
   
   const currentYear = new Date().getFullYear();
+
+  const [selectedStyle, setSelectedStyle] = useState('');
+  const [selectedColors, setSelectedColors] = useState([]);
   const [active, setActive] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState('');
 
   const [thumb, setThumb] = useState([]);
   const [thumbs, setThumbs] = useState([]);
@@ -75,9 +79,7 @@ function App() {
       provider
     );
     setNFT(nft);
-
-    const name = await nft.name();
-    console.log("name", name);
+  
   };
 
   // Form Request
@@ -123,23 +125,21 @@ function App() {
           " " +
           description +
           " " +
-          subject +
+          selectedSubject +
           " " +
           title +
           " " +
-          style +
+          selectedStyle +
           " " +
           artist +
           " " +
           medium +
           " " +
-          colour +
+          selectedColors +
           " " +
-          colour2 +
-          " " +
-          pattern +
-          " " +
-          count,
+          pattern,
+      
+
         options: { wait_for_model: true },
       }),
       responseType: "arraybuffer",
@@ -174,14 +174,14 @@ function App() {
       img,
       title,
       description,
-      style,
       artist,
       medium,
-      colour,
       keyword,
       pattern,
-      count,
-      subject,
+      selectedSubject,
+      selectedColors,
+      selectedStyle
+ 
     ]);
 
   
@@ -194,7 +194,7 @@ function App() {
     console.log("thumbs", thumbs);
    
     setItems(thumbs);
-    console.log("items", items);
+   
 
     
 
@@ -219,15 +219,13 @@ function App() {
       image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
       name: name,
       description: description,
-      style: style,
       artist: artist,
       medium: medium,
-      colour: colour,
-      colour2: colour2,
       keyword: keyword,
-      count: count,
-      subject: subject,
+      selectedSubject: selectedSubject,
       pattern: pattern,
+      selectedColors: selectedColors,
+      selectedStyle: selectedStyle,
     });
 
     // Save the URL
@@ -474,11 +472,16 @@ function App() {
  
   };
 
+  
+
+
   console.log("active", active)
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
      <div className="provider"> { provider ? "" : "Install MetaMask to Connect" }</div>
+     
+    
       <div className="form">
         <form onSubmit={submitHandler}>
           <InputFields
@@ -497,13 +500,22 @@ function App() {
             artists={artists}
             colours={colours}
             setColour2={setColour2}
+            selectedColors={selectedColors} setSelectedColors={setSelectedColors} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle}
           />
 
           <Keywords
             words={words}
-            subject={subject}
+        
             active={active}
+            setActive={setActive}
             handleChecked={handleChecked}
+            patterns={patterns}
+            setPattern={setPattern}
+          selectedSubject={selectedSubject}
+          setSelectedSubject={setSelectedSubject}
+          setKeyword={setKeyword}
+         
+            
           />
 
           {/* <Toggles   words={words}
@@ -549,6 +561,7 @@ function App() {
         title={title}
         setThumbs={setThumbs}
       />
+
     </div>
   );
 }

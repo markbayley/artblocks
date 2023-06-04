@@ -186,7 +186,7 @@ select {
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 
@@ -215,7 +215,7 @@ select {
 button {
   width: 97px;
   height: 40px;
-  margin: 5px 5px 5px 0px;
+  margin: 0px 5px 0px 0px;
   padding: 5px;
   background-color: rgb(240, 237, 237);
   border: 1px solid var(--clr-blue);
@@ -406,8 +406,6 @@ p {
     grid-template-columns: repeat(1, 1fr);
   }
 
- 
-
   .thumbnail {
     max-width: 100vw;
   }
@@ -420,6 +418,20 @@ p {
   }
 }
 
+
+@media screen and (min-width: 1170px) {
+  
+  .thumbnails {
+    grid-template-columns: repeat(8, 1fr);
+   
+   
+  }
+  .check {
+    display: flex;
+  }
+
+}
+
 @media screen and (min-width: 1681px) {
   
   .thumbnails {
@@ -428,3 +440,60 @@ p {
   }
 
 }
+
+
+
+.color-palette {
+   display: flex;
+  gap: 4px;
+  font-size: 0.6em;
+ 
+}
+
+.colors {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  
+
+}
+
+.color {
+  position: relative;
+  height: 49px;
+  width: 49px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 4px;
+  transition: filter 0.3s;
+  color: transparent;
+}
+
+.color-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+
+.color.selected {
+  /* filter: brightness(105%); */
+  border: 2px solid var(--clr-blue-2);
+}
+
+.color:not(.selected) {
+  /* filter: brightness(95%); */
+  border: 2px solid lightgray;
+}
+
+
+
+
+
+
+
+

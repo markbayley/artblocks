@@ -1,123 +1,136 @@
-import React from 'react'
+import { useState } from 'react';
 
-const Keywords = ({words, subject, active, handleChecked}) => {
+const subjects = [
+  {
+    name: "Subject",
+  },
+  {
+    name: "Landscape",
+  },
+  {
+    name: "Portrait",
+  },
+  {
+    name: "Seascape",
+  },
+  {
+    name: "Figure",
+  },
+  {
+    name: "Fruit Bowl",
+  },
+];
 
-  // merge two arrays
-  let arr0 = [...active, ...words[0]];
-  let arr1 = [...active, ...words[1]];
-  let arr2 = [...active, ...words[2]];
-  let arr3 = [...active, ...words[3]];
-  let arr4 = [...active, ...words[4]];
-  let arr5 = [...active, ...words[5]];
+const words = [
+  [],
+  ["trees", "farm", "sky", "lake", "hills", "clouds"],
+  ["face", "smile", "dress", "jewels", "mouth", "family"],
+  ["boats", "fish", "beach", "cliffs", "island", "sand"],
+  ["man", "woman", "child", "slumped", "arms", "thin"],
+  ["apple", "pear", "fresh", "banana", "colorful", "wooden"],
+  ["street", "beach", "face", "woman", "colorful", "hills"],
+];
 
-  // removing duplicate
-  let keywords0 = [...new Set(arr0.slice(0, 6))];
-  let keywords1 = [...new Set(arr1.slice(0, 6))];
-  let keywords2 = [...new Set(arr2.slice(0, 6))];
-  let keywords3 = [...new Set(arr3.slice(0, 6))];
-  let keywords4 = [...new Set(arr4.slice(0, 6))];
-  let keywords5 = [...new Set(arr5.slice(0, 6))];
+const patterns = [
+  {
+    name: "Pattern",
+  },
+  {
+    name: "Stripes",
+  },
+  {
+    name: "Checkered",
+  },
+  {
+    name: "Dots",
+  },
+  {
+    name: "Zig Zags",
+  },
+  {
+    name: "Curves",
+  },
+  {
+    name: "Speckled",
+  },
+  {
+    name: "Swirls",
+  },
+  {
+    name: "Spiked",
+  },
+  {
+    name: "Soft",
+  },
+  {
+    name: "Angular",
+  },
+];
 
+const Keywords = ({setPattern, subject, setSubject, active, setActive, setKeyword}) => {
+
+  const wordGroup = words.find((word, index) => subjects[index]?.name === subject) || [];
+
+  const uniqueKeywords = [...new Set([...active, ...wordGroup])];
+
+  const handleSubjectChange = (e) => {
+    setSubject(e.target.value);
+  };
+
+  const handleChecked = (e) => {
+    e.preventDefault();
+
+    if (active.includes(e.target.value)) {
+      const newActive = active.filter((item) => item !== e.target.value);
+      setActive(newActive);
+    } else {
+      setActive((prevArr) => [...prevArr, e.target.value]);
+      setKeyword((prevArr) => [...prevArr, e.target.value]);
+    }
+  };
 
   return (
     <>
-    {/* <div className='title'>Keywords</div> */}
-     {/* Tab Inputs */}
-     <div className='title'>Keywords</div>
-     {subject === "Landscape" ? (
-        <div className="tabs">
-      
-          {keywords0.map((item, index) => (
-            <button
-              key={index}
-              onClick={handleChecked}
-              value={item}
-              className={`button ${
-                active.includes(item) ? "activeButton" : ""
-              }`}
-            >
-              {item}
-            </button>
+      <div className="subject-dropdown check">
+        <select value={subject} onChange={handleSubjectChange}>
+          {subjects.map((subject, index) => (
+            <option key={index} value={subject.name}>
+              {subject.name}
+            </option>
           ))}
-        </div>
-      ) : subject === "Portrait" ? (
-        <div className="tabs">
-          {keywords1.map((item, index) => (
-            <button
-              key={index}
-              onClick={handleChecked}
-              value={item}
-              className={`button ${
-                active.includes(item) ? "activeButton" : ""
-              }`}
-            >
-              {item}
-            </button>
+        </select>
+        <select  onChange={(e) => setPattern(e.target.value)}>
+          {patterns.map((pattern, index) => (
+            <option key={index} value={pattern.name}>
+              {pattern.name}
+            </option>
           ))}
-        </div>
-      ) : subject === "Seascape" ? (
-        <div className="tabs">
-          {keywords2.map((item, index) => (
-            <button
-              key={index}
-              onClick={handleChecked}
-              value={item}
-              className={`button ${
-                active.includes(item) ? "activeButton" : ""
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      ) : subject === "Figure" ? (
-        <div className="tabs">
-          {keywords3.map((item, index) => (
-            <button
-              key={index}
-              onClick={handleChecked}
-              value={item}
-              className={`button ${
-                active.includes(item) ? "activeButton" : ""
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      ) : subject === "Fruit Bowl" ? (
-        <div className="tabs">
-          {keywords4.map((item, index) => (
-            <button
-              key={index}
-              onClick={handleChecked}
-              value={item}
-              className={`button ${
-                active.includes(item) ? "activeButton" : ""
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div className="tabs">
-          {keywords5.map((item, index) => (
-            <button
-              key={index}
-              onClick={handleChecked}
-              value={item}
-              className={`button ${
-                active.includes(item) ? "activeButton" : ""
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      )}
-      </>
-  )
-}
+        </select>
+      </div>
+      <div className="title">Keywords</div>
+      <div className="tabs">
+        {uniqueKeywords.slice(0, 6).map((item, index) => (
+          <button
+            key={index}
+            onClick={handleChecked}
+            value={item}
+            className={`button ${active.includes(item) ? 'activeButton' : ''}`}
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+    </>
+  );
+};
 
-export default Keywords
+export default Keywords;
+
+
+
+
+
+
+
+
+
