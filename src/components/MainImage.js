@@ -6,7 +6,6 @@ const MainImage = ({
   isCreating,
   title,
   description,
-  style,
   medium,
   image,
   url,
@@ -56,7 +55,7 @@ const MainImage = ({
       >
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-lg">
-            {title}&nbsp;<em>"{description}"</em> - {medium}, {style}
+            {title}&nbsp;<em>"{description}"</em> - {medium},
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

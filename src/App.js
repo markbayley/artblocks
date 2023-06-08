@@ -30,15 +30,11 @@ function App() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [style, setStyle] = useState("");
   const [artist, setArtist] = useState("");
   const [medium, setMedium] = useState("");
-  const [colour, setColour] = useState("");
   const [pattern, setPattern] = useState("");
-  const [subject, setSubject] = useState("");
 
   const [keyword, setKeyword] = useState("");
-  const [count, setCount] = useState(0);
 
   const [message, setMessage] = useState("");
   // const [isWaiting, setIsWaiting] = useState(false);
@@ -52,16 +48,6 @@ function App() {
   const [selectedSubject, setSelectedSubject] = useState("Landscape");
 
   const [thumbs, setThumbs] = useState([]);
-
-  const [imgData, setImgData] = useState();
-
-  // Local Storage
-  // const storedItems = JSON.parse(localStorage.getItem("items"));
-  // const [items, setItems] = useState(storedItems);
-
-  // useEffect(() => {
-  //   localStorage.setItem("items", JSON.stringify(items));
-  // }, [items]);
 
   const loadBlockchainData = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -82,7 +68,6 @@ function App() {
     e.preventDefault();
 
     const imageData = createImage();
-    // setThumbs((prevArr) => [...prevArr, newThumb])
 
     const url = await uploadImage(imageData);
 
@@ -92,14 +77,10 @@ function App() {
 
     setMessage("");
 
-   
     // e.target.reset();
     setKeyword([]);
     setActive([]);
-
   };
-
-  
 
   const createImage = async () => {
     setIsCreating(true);
@@ -152,23 +133,6 @@ function App() {
     setMessage("Image Created...");
     setIsCreating(false);
 
-
-    // const newThumb = [
-    //   img,
-    //   title,
-    //   description,
-    //   artist,
-    //   medium,
-    //   keyword,
-    //   pattern,
-    //   selectedSubject,
-    //   selectedColors,
-    //   selectedStyle,
-    //   url,
-    // ];
-
-    // setThumbs([...thumbs, newThumb]);
-
     thumbs.push([
       img,
       title,
@@ -188,10 +152,7 @@ function App() {
     return data;
   };
 
-   
-
-  const uploadImage = async (imgData) => {
-
+  const uploadImage = async (imageData) => {
     setMessage("Creating Image...");
     // Create instance to NFT.Storage
 
@@ -246,138 +207,6 @@ function App() {
     loadBlockchainData();
   }, []);
 
-  const artists = [
-    {
-      name: "Artist",
-    },
-    {
-      name: "Picasso",
-    },
-    {
-      name: "Dali",
-    },
-    {
-      name: "Van Gogh",
-    },
-    {
-      name: "Rembrandt",
-    },
-    {
-      name: "Cézanne",
-    },
-    {
-      name: "Klimt",
-    },
-    {
-      name: "Matisse",
-    },
-    {
-      name: "Pollock",
-    },
-    {
-      name: "Rothko",
-    },
-  ];
-
-  const mediums = [
-    {
-      name: "Medium",
-    },
-    {
-      name: "Watercolor",
-    },
-    {
-      name: "Oil",
-    },
-    {
-      name: "Charcoal",
-    },
-    {
-      name: "Ink",
-    },
-    {
-      name: "Gouche",
-    },
-    {
-      name: "Acrylic",
-    },
-    {
-      name: "Pencil",
-    },
-    {
-      name: "Pastels",
-    },
-  ];
-
-  const colours = [
-    {
-      name: "Colour",
-    },
-    {
-      name: "Turquoise",
-    },
-    {
-      name: "Lime Green",
-    },
-    {
-      name: "Yellow Ochre",
-    },
-    {
-      name: "Raw Sienna",
-    },
-    {
-      name: "Fushcia",
-    },
-    {
-      name: "Coral Pink",
-    },
-    {
-      name: "Crimson",
-    },
-    {
-      name: "Mauve",
-    },
-    {
-      name: "Goldenrod",
-    },
-  ];
-
-  const patterns = [
-    {
-      name: "Pattern",
-    },
-    {
-      name: "Stripes",
-    },
-    {
-      name: "Checkered",
-    },
-    {
-      name: "Dots",
-    },
-    {
-      name: "Zig Zags",
-    },
-    {
-      name: "Curves",
-    },
-    {
-      name: "Speckled",
-    },
-    {
-      name: "Swirls",
-    },
-    {
-      name: "Spiked",
-    },
-    {
-      name: "Soft",
-    },
-    {
-      name: "Angular",
-    },
-  ];
-
   return (
     <div>
       <Navigation
@@ -395,16 +224,8 @@ function App() {
           <InputFields
             setTitle={setTitle}
             setDescription={setDescription}
-            setSubject={setSubject}
             setMedium={setMedium}
-            setStyle={setStyle}
-            setColour={setColour}
             setArtist={setArtist}
-            setPattern={setPattern}
-            mediums={mediums}
-            patterns={patterns}
-            artists={artists}
-            colours={colours}
             selectedColors={selectedColors}
             setSelectedColors={setSelectedColors}
             selectedStyle={selectedStyle}
@@ -414,7 +235,6 @@ function App() {
           <Keywords
             active={active}
             setActive={setActive}
-            patterns={patterns}
             setPattern={setPattern}
             selectedSubject={selectedSubject}
             setSelectedSubject={setSelectedSubject}
@@ -428,10 +248,7 @@ function App() {
           isCreating={isCreating}
           image={image}
           message={message}
-          style={style}
           medium={medium}
-          artist={artist}
-          subject={subject}
           description={description}
           url={url}
           title={title}
@@ -443,14 +260,6 @@ function App() {
         thumbs={thumbs}
         isCreating={isCreating}
         image={image}
-        message={message}
-        style={style}
-        medium={medium}
-        artist={artist}
-        subject={subject}
-        description={description}
-        title={title}
-        setThumbs={setThumbs}
         mintingIndex={mintingIndex}
       />
     </div>
