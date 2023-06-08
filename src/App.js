@@ -18,8 +18,6 @@ import Keywords from "./components/Keywords";
 import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
 
-
-
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
@@ -27,7 +25,7 @@ function App() {
 
   const [name, setName] = useState("");
 
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("");
   const [url, setURL] = useState(null);
 
   const [title, setTitle] = useState("");
@@ -36,7 +34,6 @@ function App() {
   const [artist, setArtist] = useState("");
   const [medium, setMedium] = useState("");
   const [colour, setColour] = useState("");
-  const [colour2, setColour2] = useState("");
   const [pattern, setPattern] = useState("");
   const [subject, setSubject] = useState("");
 
@@ -48,16 +45,14 @@ function App() {
 
   const [creating, setCreating] = useState(false);
   const [minting, setMinting] = useState(false);
-  const [minted, setMinted] = useState(false);
-  
-  const currentYear = new Date().getFullYear();
 
-  const [selectedStyle, setSelectedStyle] = useState('Expressionism');
+  const [mintingIndex, setMintingIndex] = useState(0);
+
+  const [selectedStyle, setSelectedStyle] = useState("Expressionism");
   const [selectedColors, setSelectedColors] = useState([]);
   const [active, setActive] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState('Landscape');
+  const [selectedSubject, setSelectedSubject] = useState("Landscape");
 
-  const [thumb, setThumb] = useState([]);
   const [thumbs, setThumbs] = useState([]);
 
   // Local Storage
@@ -80,29 +75,28 @@ function App() {
       provider
     );
     setNFT(nft);
-  
   };
 
   // Form Request
   const submitHandler = async (e) => {
     e.preventDefault();
-   
+
     setIsWaiting(true);
 
     const imageData = createImage();
-  
+
     const url = await uploadImage(imageData);
-   
+    
     await mintImage(url);
+    
+    setMintingIndex(thumbs.length);
     setIsWaiting(false);
     setMessage("");
-  
-   
+
     setCount(count + 1);
     // e.target.reset();
     setKeyword([]);
     setActive([]);
-   
   };
 
   const createImage = async () => {
@@ -139,7 +133,6 @@ function App() {
           selectedColors +
           " " +
           pattern,
-      
 
         options: { wait_for_model: true },
       }),
@@ -156,20 +149,24 @@ function App() {
 
     console.log("Creating Thumbnail data...");
 
-    // setThumb([
+    // const newThumb = [
     //   img,
     //   title,
     //   description,
-    //   style,
     //   artist,
     //   medium,
-    //   colour,
-    //   colour2,
     //   keyword,
     //   pattern,
-    //   count,
-    //   subject,
-    // ]);
+    //   selectedSubject,
+    //   selectedColors,
+    //   selectedStyle,
+    //   url,
+    // ];
+
+  
+    console.log("Minting Index:", mintingIndex);
+
+    // setThumbs([...thumbs, newThumb]);
 
     thumbs.push([
       img,
@@ -181,23 +178,15 @@ function App() {
       pattern,
       selectedSubject,
       selectedColors,
-      selectedStyle
- 
+      selectedStyle,
+      url,
     ]);
 
-  
-    // setThumbs((prevArr) => [...prevArr, thumb]) 
-  
- 
+    // setThumbs((prevArr) => [...prevArr, thumb])
 
-
- 
     console.log("thumbs", thumbs);
-   
-    setItems(thumbs);
-   
 
-    
+    setItems(thumbs);
 
     setCreating(false);
 
@@ -209,15 +198,21 @@ function App() {
   const uploadImage = async (imageData) => {
     setMessage("Uploading Image...");
     // Create instance to NFT.Storage
-    console.log("Creating instance to NFT.Storage");
+   
     const nftstorage = new NFTStorage({
       token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
     });
 
+    const blob = await (await fetch(image)).blob();
+    const imageHash = await nftstorage.storeBlob(blob);
+    console.log("blob:", blob);
+    console.log("Image Hash:", imageHash);
+
     // Send request to store image
     setMessage("Sending request...");
     const { ipnft } = await nftstorage.store({
-      image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
+      // image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
+      image: blob,
       name: name,
       description: description,
       artist: artist,
@@ -227,15 +222,19 @@ function App() {
       pattern: pattern,
       selectedColors: selectedColors,
       selectedStyle: selectedStyle,
-    });
+    });  
+
+
+
 
     // Save the URL
     setMessage("Saving the URL");
-    const url = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
-    setURL(url);
-
-
+  
+    const url = `https://ipfs.io/ipfs/${imageHash}/`;
+   
+   setURL(url);
     return url;
+
   };
 
   const mintImage = async (tokenURI) => {
@@ -246,17 +245,14 @@ function App() {
       .connect(signer)
       .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
     await transaction.wait();
-  
 
+    console.log("signer:", signer);
+    console.log("transaction:", transaction);
   };
-  console.log("thumbs", thumbs);
 
   useEffect(() => {
     loadBlockchainData();
   }, []);
-
- 
-
 
   const artists = [
     {
@@ -288,39 +284,6 @@ function App() {
     },
     {
       name: "Rothko",
-    },
-  ];
-
-  const styles = [
-    {
-      name: "Style",
-    },
-    {
-      name: "Abstract",
-    },
-    {
-      name: "Expressionism",
-    },
-    {
-      name: "Pop Art",
-    },
-    {
-      name: "Surrealism",
-    },
-    {
-      name: "Realism",
-    },
-    {
-      name: "Minimalism",
-    },
-    {
-      name: "Impressionism",
-    },
-    {
-      name: "Cubism",
-    },
-    {
-      name: "Modernism",
     },
   ];
 
@@ -423,66 +386,18 @@ function App() {
     },
   ];
 
-  const subjects = [
-    {
-      name: "Subject",
-    },
-    {
-      name: "Landscape",
-    },
-    {
-      name: "Portrait",
-    },
-    {
-      name: "Seascape",
-    },
-    {
-      name: "Figure",
-    },
-    {
-      name: "Fruit Bowl",
-    },
-  ];
-
-  const words = [
-    ["trees", "farm", "sky", "lake", "hills", "clouds"] ,
-    ["face", "smile", "dress", "jewels", "mouth", "family"] ,
-     ["boats", "fish", "beach", "cliffs", "island", "sand"] ,
-     ["man", "woman", "child", "slumped", "arms", "thin"] ,
-     ["apple", "pear", "fresh", "banana", "colorful", "wooden"] ,
-    ["street", "beach", "face", "woman", "colorful", "hills"] 
-  ];
-
-  // Toggle Buttons
-  const handleChecked = (e) => {
-    e.preventDefault();
-
-    if (active.includes(e.target.value)) {
-      const newactive = active.filter(function (item) {
-        return item !== e.target.value;
-    });
-
-    setActive(newactive);
-  
-    } else {
-
-      setActive((prevArr) => [...prevArr, e.target.value])
-    }
-
-    // setKeyword((prevArr) => [...prevArr, " " + e.target.value]);
- 
-  };
-
-  
-
-
-  console.log("active", active)
   return (
     <div>
-      <Navigation account={account} setAccount={setAccount} provider={provider}/>
-     <div className="provider"> { provider ? "" : "Install MetaMask to Connect" }</div>
-     
-    
+      <Navigation
+        account={account}
+        setAccount={setAccount}
+        provider={provider}
+      />
+      <div className="provider">
+        {" "}
+        {provider ? "" : "Install MetaMask to Connect"}
+      </div>
+
       <div className="form">
         <form onSubmit={submitHandler}>
           <InputFields
@@ -494,33 +409,25 @@ function App() {
             setColour={setColour}
             setArtist={setArtist}
             setPattern={setPattern}
-            subjects={subjects}
-            styles={styles}
             mediums={mediums}
             patterns={patterns}
             artists={artists}
             colours={colours}
-            setColour2={setColour2}
-            selectedColors={selectedColors} setSelectedColors={setSelectedColors} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle}
+            selectedColors={selectedColors}
+            setSelectedColors={setSelectedColors}
+            selectedStyle={selectedStyle}
+            setSelectedStyle={setSelectedStyle}
           />
 
           <Keywords
-            words={words}
-        
             active={active}
             setActive={setActive}
-            handleChecked={handleChecked}
             patterns={patterns}
             setPattern={setPattern}
-          selectedSubject={selectedSubject}
-          setSelectedSubject={setSelectedSubject}
-          setKeyword={setKeyword}
-         
-            
+            selectedSubject={selectedSubject}
+            setSelectedSubject={setSelectedSubject}
+            setKeyword={setKeyword}
           />
-
-          {/* <Toggles   words={words}
-            subject={subject}/> */}
 
           <CreateButton
             image={image}
@@ -531,7 +438,7 @@ function App() {
 
         <MainImage
           isWaiting={isWaiting}
-          image={image}
+          image={thumbs[mintingIndex]?.[0]}
           message={message}
           style={style}
           medium={medium}
@@ -561,9 +468,8 @@ function App() {
         creating={creating}
         title={title}
         setThumbs={setThumbs}
+        mintingIndex={mintingIndex}
       />
-   
-
     </div>
   );
 }

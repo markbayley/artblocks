@@ -1,10 +1,8 @@
 import { useState } from "react";
-
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
-import { Button } from "react-bootstrap";
 
-const Thumbnails = ({ thumbs }) => {
+const Thumbnails = ({ thumbs, isWaiting, image, mintingIndex }) => {
   const [lgShow, setLgShow] = useState(false);
   const [modalData, setModalData] = useState([]);
 
@@ -12,29 +10,53 @@ const Thumbnails = ({ thumbs }) => {
     <>
       <div className="heading">My Artblocks</div>
       <div className="thumbnails">
-        {thumbs.length === 0  ? <div className="text__placeholder">No Artblocks minted</div> :
-          thumbs.map((item, index) => (
-            <>
-              <div className="" onClick={() => setLgShow(true)}>
-                <div className="thumbnail">
-                  <img
-                   key={index}
-                    src={item[0]}
-                    alt="AI thumbnail"
-                    onClick={() => {
-                      setModalData(item);
-                      // setLgShow(true);
-                    }}
-                  />
-                  <>
-                    &nbsp;{item[1]}
-                    <em>"{item[2]}"</em>
-                  </>
+        {thumbs.length === 0 ? (
+          <div className="text__placeholder">No Artblocks minted</div>
+        ) : (
+          thumbs
+            .map((item, index) => (
+              <>
+                {!isWaiting && image && index !== mintingIndex ? (
+                  <div className="" onClick={() => setLgShow(true)}>
+                    <div className="thumbnail">
+                      <img
+                        key={index}
+                        src={item[0]}
+                        alt="AI thumbnail"
+                        onClick={() => {
+                          setModalData(item);
+                          // setLgShow(true);
+                        }}
+                      />
+                      <>
+                        &nbsp;{item[1]}
+                        <em>"{item[2]}"</em>
+                      </>
+                    </div>
+                  </div>
+                ) : isWaiting && index !== mintingIndex ? (
+                  <div className="" onClick={() => setLgShow(true)}>
+                  <div className="thumbnail">
+                    <img
+                      key={index}
+                      src={item[0]}
+                      alt="AI thumbnail"
+                      onClick={() => {
+                        setModalData(item);
+                        // setLgShow(true);
+                      }}
+                    />
+                    <>
+                      &nbsp;{item[1]}
+                      <em>"{item[2]}"</em>
+                    </>
+                  </div>
                 </div>
-              </div>
-            </>
-          ))
-          .reverse()}
+                ) : null}
+              </>
+            ))
+            .reverse()
+        )}
       </div>
 
       <Modal

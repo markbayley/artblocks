@@ -79,14 +79,16 @@ const Keywords = ({setPattern, selectedSubject, setSelectedSubject, active, setA
 
   const handleChecked = (e) => {
     e.preventDefault();
-
+   
     if (active.includes(e.target.value)) {
       const newActive = active.filter((item) => item !== e.target.value);
       setActive(newActive);
     } else {
       setActive((prevArr) => [...prevArr, e.target.value]);
       setKeyword((prevArr) => [...prevArr, e.target.value]);
+
     }
+  
   };
 
   return (
