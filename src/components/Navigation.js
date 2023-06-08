@@ -2,16 +2,14 @@ import { ethers } from "ethers";
 
 import Dropdown from "react-bootstrap/Dropdown";
 
-const Navigation = ({ account, setAccount }) => {
+const Navigation = ({ account, setAccount, provider }) => {
   const connectHandler = async () => {
-
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
     const account = ethers.utils.getAddress(accounts[0]);
-   
-    setAccount(account) 
- 
+
+    setAccount(account);
   };
 
   return (
@@ -20,13 +18,10 @@ const Navigation = ({ account, setAccount }) => {
         <h1>Artblocks</h1>
       </div>
 
-
       {account ? (
         <div style={{ display: "flex" }}>
           <Dropdown>
-            <Dropdown.Toggle className="nav__menu">
-              Account
-            </Dropdown.Toggle>
+            <Dropdown.Toggle className="nav__menu">Account</Dropdown.Toggle>
 
             <Dropdown.Menu>
               <Dropdown.Item href="#/action-1">Profile</Dropdown.Item>
@@ -42,26 +37,36 @@ const Navigation = ({ account, setAccount }) => {
         </div>
       ) : (
         <div style={{ display: "flex" }}>
-        
-            <Dropdown>
-            <Dropdown.Toggle  className="nav__menu">
-              Menu
-            </Dropdown.Toggle>
+          <Dropdown>
+            <Dropdown.Toggle className="nav__menu">Menu</Dropdown.Toggle>
 
             <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1">Login</Dropdown.Item>
+              <Dropdown.Item href="#/action-1">Login</Dropdown.Item>
               <Dropdown.Item href="#/action-1">About</Dropdown.Item>
               <Dropdown.Item href="#/action-2">Store</Dropdown.Item>
               <Dropdown.Item href="#/action-3">Contact</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          <button
-            type="button"
-            className="nav__connect"
-            onClick={connectHandler}
-          >
-          Connect
-          </button>
+
+          {provider ? (
+            <button
+              type="button"
+              className="nav__connect"
+              onClick={connectHandler}
+            >
+              Connect
+            </button>
+          ) : (
+            <a href="https://metamask.io/">
+              <button
+                type="button"
+                className="nav__connect"
+                onClick={connectHandler}
+              >
+                Install
+              </button>
+            </a>
+          )}
         </div>
       )}
     </nav>

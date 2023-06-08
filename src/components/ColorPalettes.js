@@ -84,13 +84,12 @@ const ColorPalettes = ({selectedColors, setSelectedColors, selectedStyle, setSel
   
     return (
         <div className="style-dropdown check">
-        <div >
+        <div style={{width: "350px"}}>
           <select value={selectedStyle} onChange={handleStyleChange}>
             {styleOptions}
           </select>
-        
         </div>
-        <div className="color-palette ">{colorButtons}</div>
+        <div className="color-palette">{colorButtons}</div>
       </div>
     //   <div className="color-palette check">
     //     <div style={{width: "350px"}}>

@@ -67,14 +67,14 @@ const patterns = [
   },
 ];
 
-const Keywords = ({setPattern, subject, setSubject, active, setActive, setKeyword}) => {
+const Keywords = ({setPattern, selectedSubject, setSelectedSubject, active, setActive, setKeyword}) => {
 
-  const wordGroup = words.find((word, index) => subjects[index]?.name === subject) || [];
+  const wordGroup = words.find((word, index) => subjects[index]?.name === selectedSubject) || [];
 
   const uniqueKeywords = [...new Set([...active, ...wordGroup])];
 
   const handleSubjectChange = (e) => {
-    setSubject(e.target.value);
+    setSelectedSubject(e.target.value);
   };
 
   const handleChecked = (e) => {
@@ -92,7 +92,7 @@ const Keywords = ({setPattern, subject, setSubject, active, setActive, setKeywor
   return (
     <>
       <div className="subject-dropdown check">
-        <select value={subject} onChange={handleSubjectChange}>
+        <select value={selectedSubject} onChange={handleSubjectChange}>
           {subjects.map((subject, index) => (
             <option key={index} value={subject.name}>
               {subject.name}

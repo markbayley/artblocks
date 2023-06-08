@@ -306,6 +306,15 @@ button:hover {
   margin: 10px;
 }
 
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  color: white;
+}
+
 /* ------------------------------------------------------ */
 /* -- IMAGE -- */
 
@@ -397,6 +406,57 @@ p {
   padding: 0px */
 }
 
+.color-palette {
+  display: flex;
+ gap: 4px;
+ font-size: 0.6em;
+
+}
+
+.colors {
+ display: flex;
+ align-items: center;
+ justify-content: space-around;
+ 
+
+}
+
+.color {
+ position: relative;
+ height: 49px;
+ width: 49px;
+ border-radius: 5px;
+ cursor: pointer;
+ margin-left: 4px;
+ transition: filter 0.3s;
+ color: transparent;
+}
+
+.color-name {
+ position: absolute;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+ color: white;
+ font-size: 12px;
+ pointer-events: none;
+}
+
+
+.color.selected {
+ /* filter: brightness(105%); */
+ border: 2px solid var(--clr-blue-2);
+}
+
+.color:not(.selected) {
+ /* filter: brightness(95%); */
+ border: 2px solid lightgray;
+}
+
+
+
+
+
 @media screen and (max-width: 768px) {
   .form {
     flex-direction: column;
@@ -416,8 +476,22 @@ p {
     border-radius: 6px;
     margin: 10px 10px 0px 10px;
   }
+
+  .color-palette {
+    margin-top: 10px;
+    gap: 0px;
 }
 
+.check {
+  display:block;
+}
+
+select {
+  width: 350px;;
+}
+
+
+}
 
 @media screen and (min-width: 1170px) {
   
@@ -426,9 +500,7 @@ p {
    
    
   }
-  .check {
-    display: flex;
-  }
+
 
 }
 
@@ -443,52 +515,6 @@ p {
 
 
 
-.color-palette {
-   display: flex;
-  gap: 4px;
-  font-size: 0.6em;
- 
-}
-
-.colors {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  
-
-}
-
-.color {
-  position: relative;
-  height: 49px;
-  width: 49px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 4px;
-  transition: filter 0.3s;
-  color: transparent;
-}
-
-.color-name {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 12px;
-  pointer-events: none;
-}
-
-
-.color.selected {
-  /* filter: brightness(105%); */
-  border: 2px solid var(--clr-blue-2);
-}
-
-.color:not(.selected) {
-  /* filter: brightness(95%); */
-  border: 2px solid lightgray;
-}
 
 
 

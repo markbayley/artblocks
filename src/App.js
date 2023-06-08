@@ -19,6 +19,7 @@ import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
 
 
+
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
@@ -51,10 +52,10 @@ function App() {
   
   const currentYear = new Date().getFullYear();
 
-  const [selectedStyle, setSelectedStyle] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState('Expressionism');
   const [selectedColors, setSelectedColors] = useState([]);
   const [active, setActive] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('Landscape');
 
   const [thumb, setThumb] = useState([]);
   const [thumbs, setThumbs] = useState([]);
@@ -478,7 +479,7 @@ function App() {
   console.log("active", active)
   return (
     <div>
-      <Navigation account={account} setAccount={setAccount} />
+      <Navigation account={account} setAccount={setAccount} provider={provider}/>
      <div className="provider"> { provider ? "" : "Install MetaMask to Connect" }</div>
      
     
@@ -561,6 +562,7 @@ function App() {
         title={title}
         setThumbs={setThumbs}
       />
+   
 
     </div>
   );
