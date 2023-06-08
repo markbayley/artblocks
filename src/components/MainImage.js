@@ -1,34 +1,37 @@
-
 import { useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 
 const MainImage = ({
-  isWaiting,
+  isCreating,
   title,
   description,
   style,
   medium,
   image,
-  minting,
-  creating,
   url,
   message,
 }) => {
   const [lgShow, setLgShow] = useState(false);
 
   const renderImage = () => {
-    if (!isWaiting && image) {
+    if (!isCreating && image) {
       return <img src={image} alt="AI generated image" />;
-    } else if (isWaiting) {
+    } else if (isCreating) {
       return (
         <div style={{ position: "relative", width: "350px", height: "350px" }}>
-  <img src={image} alt="AI generated image" style={{ width: "100%", height: "100%" }} />
-  <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-    <Spinner animation="border" />
-    <span>{message}</span>
-  </div>
-</div>
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <Spinner animation="border" />
+            <span>{message}</span>
+          </div>
+        </div>
       );
     } else {
       return (
@@ -68,16 +71,13 @@ const MainImage = ({
       </div>
 
       <div className="main-image-text">
-        {!isWaiting && url && ""}
-        {minting ? (
-          <p className="status-message">Minting block...</p>
-        ) : creating ? (
-          <p className="status-message">Your Artblock is being created...</p>
-        ) : (
-          <p className="title">
-            {title ? title : "Title"}&nbsp;"{description ? description : "description"}"
-          </p>
-        )}
+        <p className="title">
+          {isCreating
+            ? "Your Artblock is being created..."
+            : title || description
+            ? title + ", " + description
+            : "Title, description"}
+        </p>
       </div>
     </div>
   );

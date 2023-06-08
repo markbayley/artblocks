@@ -2,7 +2,7 @@ import { useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 
-const Thumbnails = ({ thumbs, isWaiting, image, mintingIndex }) => {
+const Thumbnails = ({ thumbs, isCreating, image, mintingIndex }) => {
   const [lgShow, setLgShow] = useState(false);
   const [modalData, setModalData] = useState([]);
 
@@ -16,8 +16,8 @@ const Thumbnails = ({ thumbs, isWaiting, image, mintingIndex }) => {
           thumbs
             .map((item, index) => (
               <>
-                {!isWaiting && image && index !== mintingIndex ? (
-                  <div className="" onClick={() => setLgShow(true)}>
+                {!isCreating && image && index !== mintingIndex ? (
+                  <div className="" onClick={() => setLgShow(true)}  key={index}>
                     <div className="thumbnail">
                       <img
                         key={index}
@@ -34,8 +34,8 @@ const Thumbnails = ({ thumbs, isWaiting, image, mintingIndex }) => {
                       </>
                     </div>
                   </div>
-                ) : isWaiting && index !== mintingIndex ? (
-                  <div className="" onClick={() => setLgShow(true)}>
+                ) : isCreating && index !== mintingIndex ? (
+                  <div className="" onClick={() => setLgShow(true)}  key={index}>
                   <div className="thumbnail">
                     <img
                       key={index}

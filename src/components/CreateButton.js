@@ -1,24 +1,12 @@
-import React from 'react'
+import React from "react";
 
-const CreateButton = ({image, creating, isWaiting }) => {
+const CreateButton = ({ isCreating, setIsCreating }) => {
   return (
-       <>
-         {image ? (
-            <input type="submit" value="Create"></input>
-          ) : (
-            <div>
-              <input
-                type="submit"
-                value={creating ? "Creating Art..." : "Create"}
-              ></input>
-              {/* <input onSubmit={clearHandler}
-            type="submit"
-            value={"Clear"}
-          ></input> */}
-            </div>
-          )}
-          </>
-  )
-}
+    <input
+      type="submit"
+      value={isCreating ? "Creating Art..." : "Create"}
+    ></input>
+  );
+};
 
-export default CreateButton
+export default CreateButton;

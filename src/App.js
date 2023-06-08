@@ -41,10 +41,8 @@ function App() {
   const [count, setCount] = useState(0);
 
   const [message, setMessage] = useState("");
-  const [isWaiting, setIsWaiting] = useState(false);
-
-  const [creating, setCreating] = useState(false);
-  const [minting, setMinting] = useState(false);
+  // const [isWaiting, setIsWaiting] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const [mintingIndex, setMintingIndex] = useState(0);
 
@@ -55,13 +53,15 @@ function App() {
 
   const [thumbs, setThumbs] = useState([]);
 
-  // Local Storage
-  const storedItems = JSON.parse(localStorage.getItem("items"));
-  const [items, setItems] = useState(storedItems);
+  const [imgData, setImgData] = useState();
 
-  useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(items));
-  }, [items]);
+  // Local Storage
+  // const storedItems = JSON.parse(localStorage.getItem("items"));
+  // const [items, setItems] = useState(storedItems);
+
+  // useEffect(() => {
+  //   localStorage.setItem("items", JSON.stringify(items));
+  // }, [items]);
 
   const loadBlockchainData = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -81,31 +81,33 @@ function App() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    setIsWaiting(true);
-
     const imageData = createImage();
+    // setThumbs((prevArr) => [...prevArr, newThumb])
 
     const url = await uploadImage(imageData);
-    
+
     await mintImage(url);
-    
+
     setMintingIndex(thumbs.length);
-    setIsWaiting(false);
+
     setMessage("");
 
-    setCount(count + 1);
+   
     // e.target.reset();
     setKeyword([]);
     setActive([]);
+
   };
 
+  
+
   const createImage = async () => {
+    setIsCreating(true);
     setMessage("Generating Image...");
-    setCreating(true);
+
     const URL = `https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2`;
 
     // Send the request
-    setMessage("Sending the request...");
     const response = await axios({
       url: URL,
       method: "POST",
@@ -147,7 +149,9 @@ function App() {
 
     setImage(img);
 
-    console.log("Creating Thumbnail data...");
+    setMessage("Image Created...");
+    setIsCreating(false);
+
 
     // const newThumb = [
     //   img,
@@ -162,9 +166,6 @@ function App() {
     //   selectedStyle,
     //   url,
     // ];
-
-  
-    console.log("Minting Index:", mintingIndex);
 
     // setThumbs([...thumbs, newThumb]);
 
@@ -182,23 +183,18 @@ function App() {
       url,
     ]);
 
-    // setThumbs((prevArr) => [...prevArr, thumb])
-
     console.log("thumbs", thumbs);
-
-    setItems(thumbs);
-
-    setCreating(false);
-
-    console.log(localStorage);
 
     return data;
   };
 
-  const uploadImage = async (imageData) => {
-    setMessage("Uploading Image...");
-    // Create instance to NFT.Storage
    
+
+  const uploadImage = async (imgData) => {
+
+    setMessage("Creating Image...");
+    // Create instance to NFT.Storage
+
     const nftstorage = new NFTStorage({
       token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
     });
@@ -222,19 +218,15 @@ function App() {
       pattern: pattern,
       selectedColors: selectedColors,
       selectedStyle: selectedStyle,
-    });  
-
-
-
+    });
 
     // Save the URL
     setMessage("Saving the URL");
-  
-    const url = `https://ipfs.io/ipfs/${imageHash}/`;
-   
-   setURL(url);
-    return url;
 
+    const url = `https://ipfs.io/ipfs/${imageHash}/`;
+    setURL(url);
+
+    return url;
   };
 
   const mintImage = async (tokenURI) => {
@@ -429,24 +421,18 @@ function App() {
             setKeyword={setKeyword}
           />
 
-          <CreateButton
-            image={image}
-            creating={creating}
-            isWaitng={isWaiting}
-          />
+          <CreateButton setIsCreating={setIsCreating} isCreating={isCreating} />
         </form>
 
         <MainImage
-          isWaiting={isWaiting}
-          image={thumbs[mintingIndex]?.[0]}
+          isCreating={isCreating}
+          image={image}
           message={message}
           style={style}
           medium={medium}
           artist={artist}
           subject={subject}
           description={description}
-          minting={minting}
-          creating={creating}
           url={url}
           title={title}
         />
@@ -454,9 +440,8 @@ function App() {
 
       <Thumbnails
         url={url}
-        items={items}
         thumbs={thumbs}
-        isWaiting={isWaiting}
+        isCreating={isCreating}
         image={image}
         message={message}
         style={style}
@@ -464,8 +449,6 @@ function App() {
         artist={artist}
         subject={subject}
         description={description}
-        minting={minting}
-        creating={creating}
         title={title}
         setThumbs={setThumbs}
         mintingIndex={mintingIndex}
