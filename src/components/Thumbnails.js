@@ -2,7 +2,7 @@ import { useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 
-const Thumbnails = ({ thumbs, isCreating, image, mintingIndex }) => {
+const Thumbnails = ({ thumbs, isCreating, image, mintingIndex, url }) => {
   const [lgShow, setLgShow] = useState(false);
   const [modalData, setModalData] = useState([]);
 
@@ -21,7 +21,7 @@ const Thumbnails = ({ thumbs, isCreating, image, mintingIndex }) => {
                     <div className="thumbnail">
                       <img
                         key={index}
-                        src={item[0]}
+                        src={item[10]}
                         alt="AI thumbnail"
                         onClick={() => {
                           setModalData(item);
@@ -31,6 +31,7 @@ const Thumbnails = ({ thumbs, isCreating, image, mintingIndex }) => {
                       <>
                         &nbsp;{item[1]}
                         <em>"{item[2]}"</em>
+                        <a target="_blank" style={{color: "black"}} href={item[10]}>&nbsp;&nbsp;&nbsp;url</a> 
                       </>
                     </div>
                   </div>
@@ -39,7 +40,7 @@ const Thumbnails = ({ thumbs, isCreating, image, mintingIndex }) => {
                   <div className="thumbnail">
                     <img
                       key={index}
-                      src={item[0]}
+                      src={item[10]}
                       alt="AI thumbnail"
                       onClick={() => {
                         setModalData(item);
@@ -49,13 +50,15 @@ const Thumbnails = ({ thumbs, isCreating, image, mintingIndex }) => {
                     <>
                       &nbsp;{item[1]}
                       <em>"{item[2]}"</em>
+                 
+                     <a target="_blank" style={{color: "black"}} href={item[10]}>&nbsp;&nbsp;&nbsp;url</a> 
                     </>
                   </div>
                 </div>
                 ) : null}
               </>
             ))
-            .reverse()
+            // .reverse()
         )}
       </div>
 

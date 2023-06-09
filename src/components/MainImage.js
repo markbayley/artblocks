@@ -10,6 +10,7 @@ const MainImage = ({
   image,
   url,
   message,
+  metaData,
 }) => {
   const [lgShow, setLgShow] = useState(false);
 
@@ -76,6 +77,8 @@ const MainImage = ({
             : title || description
             ? title + ", " + description
             : "Title, description"}
+      {metaData ? <a target="_blank" style={{color: "black"}} href={metaData}>&nbsp;&nbsp;&nbsp;data</a> : null}
+      {url ? <a target="_blank" style={{color: "black"}} href={url}>&nbsp;&nbsp;&nbsp;url</a> : null}
         </p>
       </div>
     </div>

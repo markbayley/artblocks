@@ -18,6 +18,7 @@ import Keywords from "./components/Keywords";
 import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
 
+
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
@@ -27,6 +28,7 @@ function App() {
 
   const [image, setImage] = useState("");
   const [url, setURL] = useState(null);
+  const [metaData, setMetaData] = useState(null);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -39,6 +41,7 @@ function App() {
   const [message, setMessage] = useState("");
   // const [isWaiting, setIsWaiting] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
 
   const [mintingIndex, setMintingIndex] = useState(0);
 
@@ -68,6 +71,25 @@ function App() {
     e.preventDefault();
 
     const imageData = createImage();
+
+    // const url = await uploadImage(imageData);
+
+    // await mintImage(url);
+
+    // setMintingIndex(thumbs.length);
+
+    // setMessage("");
+
+    // e.target.reset();
+    // setKeyword([]);
+    // setActive([]);
+  };
+
+
+  const mintHandler = async (e, imageData) => {
+    e.preventDefault();
+
+    // const imageData = createImage();
 
     const url = await uploadImage(imageData);
 
@@ -131,9 +153,70 @@ function App() {
     setImage(img);
 
     setMessage("Image Created...");
-    setIsCreating(false);
+    
 
-    thumbs.push([
+    // thumbs.push([
+    //   img,
+    //   title,
+    //   description,
+    //   artist,
+    //   medium,
+    //   keyword,
+    //   pattern,
+    //   selectedSubject,
+    //   selectedColors,
+    //   selectedStyle,
+    //   url,
+    // ]);
+
+    // console.log("thumbs", thumbs);
+    setIsCreating(false);
+    return data;
+  };
+
+
+  const uploadImage = async (imageData, img) => {
+    setIsMinting(true);
+    setMessage("Creating Image...");
+    // Create instance to NFT.Storage
+
+    const nftstorage = new NFTStorage({
+      token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
+    });
+
+    const blob = await (await fetch(image)).blob();
+    const imageHash = await nftstorage.storeBlob(blob);
+    console.log("blob:", blob);
+    console.log("Image Hash:", imageHash);
+
+    const url = `https://ipfs.io/ipfs/${imageHash}/`;
+
+    // Send request to store image
+    setMessage("Sending request...");
+    const { ipnft } = await nftstorage.store({
+      image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
+      blob: blob,
+      url: url,
+      name: name,
+      description: description,
+      artist: artist,
+      medium: medium,
+      keyword: keyword,
+      selectedSubject: selectedSubject,
+      pattern: pattern,
+      selectedColors: selectedColors,
+      selectedStyle: selectedStyle,
+    });
+
+    // Save the URL
+    setMessage("Saving the URL");
+
+    // await createImage(url); // Pass the URL to createImage
+    setURL(url);
+    const metaData = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
+    setMetaData(metaData);
+
+       thumbs.push([
       img,
       title,
       description,
@@ -149,48 +232,12 @@ function App() {
 
     console.log("thumbs", thumbs);
 
-    return data;
-  };
-
-  const uploadImage = async (imageData) => {
-    setMessage("Creating Image...");
-    // Create instance to NFT.Storage
-
-    const nftstorage = new NFTStorage({
-      token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
-    });
-
-    const blob = await (await fetch(image)).blob();
-    const imageHash = await nftstorage.storeBlob(blob);
-    console.log("blob:", blob);
-    console.log("Image Hash:", imageHash);
-
-    // Send request to store image
-    setMessage("Sending request...");
-    const { ipnft } = await nftstorage.store({
-      // image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
-      image: blob,
-      name: name,
-      description: description,
-      artist: artist,
-      medium: medium,
-      keyword: keyword,
-      selectedSubject: selectedSubject,
-      pattern: pattern,
-      selectedColors: selectedColors,
-      selectedStyle: selectedStyle,
-    });
-
-    // Save the URL
-    setMessage("Saving the URL");
-
-    const url = `https://ipfs.io/ipfs/${imageHash}/`;
-    setURL(url);
-
     return url;
+
   };
 
   const mintImage = async (tokenURI) => {
+    console.log("tokenURI:", tokenURI);
     setMessage("Click 'Confirm' in Metamask...");
 
     const signer = await provider.getSigner();
@@ -198,14 +245,18 @@ function App() {
       .connect(signer)
       .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
     await transaction.wait();
-
+   
+    setIsMinting(false);
     console.log("signer:", signer);
     console.log("transaction:", transaction);
+    console.log("transactionF:", transaction.from);
+
   };
 
   useEffect(() => {
     loadBlockchainData();
   }, []);
+
 
   return (
     <div>
@@ -240,8 +291,14 @@ function App() {
             setSelectedSubject={setSelectedSubject}
             setKeyword={setKeyword}
           />
-
+<div style={{display: "flex", width: "100%", justifyContent: "space-between"}}>
           <CreateButton setIsCreating={setIsCreating} isCreating={isCreating} />
+          <input onClick={mintHandler}
+      type="submit"
+      value={isMinting ? "Minting Art..." : "Mint"}
+    ></input>
+    </div>
+       
         </form>
 
         <MainImage
@@ -252,16 +309,22 @@ function App() {
           description={description}
           url={url}
           title={title}
+          metaData={metaData}
         />
       </div>
-
-      <Thumbnails
-        url={url}
-        thumbs={thumbs}
-        isCreating={isCreating}
-        image={image}
-        mintingIndex={mintingIndex}
-      />
+      {account ? (
+        <Thumbnails
+          url={url}
+          thumbs={thumbs}
+          isCreating={isCreating}
+          image={image}
+          mintingIndex={mintingIndex}
+        />
+      ) : (
+        <div className="heading">
+          Connect to account to view minted Artblocks
+        </div>
+      )}
     </div>
   );
 }
