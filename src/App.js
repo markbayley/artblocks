@@ -19,6 +19,8 @@ import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
 
 
+
+
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
@@ -35,22 +37,37 @@ function App() {
   const [artist, setArtist] = useState("");
   const [medium, setMedium] = useState("");
   const [pattern, setPattern] = useState("");
-
   const [keyword, setKeyword] = useState("");
+  const [selectedStyle, setSelectedStyle] = useState("Expressionism");
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState("Landscape");
 
   const [message, setMessage] = useState("");
   // const [isWaiting, setIsWaiting] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
-
   const [mintingIndex, setMintingIndex] = useState(0);
 
-  const [selectedStyle, setSelectedStyle] = useState("Expressionism");
-  const [selectedColors, setSelectedColors] = useState([]);
   const [active, setActive] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState("Landscape");
-
+  const [transaction, setTransaction] = useState();
   const [thumbs, setThumbs] = useState([]);
+
+
+  useEffect(() => {
+    if (thumbs.length > 0) {
+    localStorage.setItem('thumbs', JSON.stringify(thumbs));
+    }
+    setMintingIndex(thumbs.length);
+  }, [thumbs]);
+
+  useEffect(() => {
+    const thumbs = JSON.parse(localStorage.getItem('thumbs'));
+    if (thumbs) {
+     setThumbs(thumbs);
+    }
+}, []);
+
+
 
   const loadBlockchainData = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -64,39 +81,32 @@ function App() {
       provider
     );
     setNFT(nft);
+    console.log(nft.address);
   };
+
 
   // Form Request
   const submitHandler = async (e) => {
     e.preventDefault();
-
+    setURL(null);
+    setMetaData(null);
     const imageData = createImage();
-
-    // const url = await uploadImage(imageData);
-
-    // await mintImage(url);
-
-    // setMintingIndex(thumbs.length);
-
-    // setMessage("");
-
-    // e.target.reset();
-    // setKeyword([]);
-    // setActive([]);
+  
+ 
   };
 
 
   const mintHandler = async (e, imageData) => {
     e.preventDefault();
 
-    // const imageData = createImage();
 
     const url = await uploadImage(imageData);
-
+   
     await mintImage(url);
 
-    setMintingIndex(thumbs.length);
-
+ 
+    setIsMinting(false);
+ 
     setMessage("");
 
     // e.target.reset();
@@ -107,7 +117,7 @@ function App() {
   const createImage = async () => {
     setIsCreating(true);
     setMessage("Generating Image...");
-
+    // getURL(nft);
     const URL = `https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2`;
 
     // Send the request
@@ -140,13 +150,15 @@ function App() {
           pattern,
 
         options: { wait_for_model: true },
+       
       }),
       responseType: "arraybuffer",
+     
     });
-
+    
     const type = response.headers["content-type"];
     const data = response.data;
-
+ 
     const base64data = Buffer.from(data).toString("base64");
     const img = `data:${type};base64,` + base64data;
 
@@ -154,24 +166,9 @@ function App() {
 
     setMessage("Image Created...");
     
-
-    // thumbs.push([
-    //   img,
-    //   title,
-    //   description,
-    //   artist,
-    //   medium,
-    //   keyword,
-    //   pattern,
-    //   selectedSubject,
-    //   selectedColors,
-    //   selectedStyle,
-    //   url,
-    // ]);
-
-    // console.log("thumbs", thumbs);
     setIsCreating(false);
     return data;
+   
   };
 
 
@@ -197,17 +194,23 @@ function App() {
     const { ipnft } = await nftstorage.store({
       image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
       blob: blob,
-      url: url,
+      account: account,
       name: name,
       description: description,
       artist: artist,
       medium: medium,
       keyword: keyword,
-      selectedSubject: selectedSubject,
       pattern: pattern,
+      selectedSubject: selectedSubject,
       selectedColors: selectedColors,
       selectedStyle: selectedStyle,
+      url: url,
+      transaction: transaction,
+      contract: nft.address,
     });
+     console.log("nft.address", nft.address);
+    // const status = await nftstorage.check('bafyreihzgvzbwi7hklznod44nu36kfl4a2fymgwah5rxwnvnq4ydx7mwb4')
+    // console.log("status", status);
 
     // Save the URL
     setMessage("Saving the URL");
@@ -217,7 +220,7 @@ function App() {
     const metaData = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
     setMetaData(metaData);
 
-      thumbs.push([
+    const newThumb = ([
       account,
       title,
       description,
@@ -229,15 +232,43 @@ function App() {
       selectedColors,
       selectedStyle,
       url,
+      transaction,
+      metaData,
     ]);
 
-    console.log("thumbs", thumbs);
+    const newItem = [
+      {
+      account: account,
+      name: name,
+      description: description,
+      artist: artist,
+      medium: medium,
+      keyword: keyword,
+      pattern: pattern,
+      selectedSubject: selectedSubject,
+      selectedColors: selectedColors,
+      selectedStyle: selectedStyle,
+      url: url,
+      }
+    ];
+
+
+    
+    setThumbs([...thumbs, newThumb]);
+   
+    // setItems((prevArr) => ([...prevArr, newItem]));
+
+    
+
 
     return url;
 
   };
 
+  
+
   const mintImage = async (tokenURI) => {
+
     console.log("tokenURI:", tokenURI);
     setMessage("Click 'Confirm' in Metamask to Mint...");
 
@@ -247,18 +278,20 @@ function App() {
       .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
     await transaction.wait();
    
-    setIsMinting(false);
-    console.log("isMinting", isMinting);
+    
+  
     console.log("signer:", signer);
-    console.log("transaction:", transaction);
-    console.log("transactionF:", transaction.from);
-
+    // console.log("transaction:", transaction);
+    console.log("transaction.hash:", transaction.hash); 
+    const hash = transaction.hash;
+    setTransaction(hash)
+    uploadImage(transaction);
   };
-
+  
+ 
   useEffect(() => {
     loadBlockchainData();
-  }, [account]);
-
+  }, []);
 
   return (
     <div>
@@ -294,15 +327,17 @@ function App() {
             setKeyword={setKeyword}
           />
 <div style={{display: "flex", width: "100%", justifyContent: "space-between"}}>
-          <CreateButton setIsCreating={setIsCreating} isCreating={isCreating} />
+          <CreateButton isCreating={isCreating} />
+
           <input onClick={mintHandler}
       type="submit"
+
       value={isMinting ? "Minting Art..." : "Mint"}
+      className={ isMinting ? "waitingButton" : !image || url ? "disabledButton" : ""}
     ></input>
     </div>
        
         </form>
-
         <MainImage
           isCreating={isCreating}
           isMinting={isMinting}
@@ -323,10 +358,14 @@ function App() {
           image={image}
           mintingIndex={mintingIndex}
           account={account}
+          isMinting={isMinting}
+          transaction={transaction}
+
         />
       ) : (
         <div className="heading">
           Connect to account to view minted Artblocks
+     
         </div>
       )}
     </div>

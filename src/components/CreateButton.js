@@ -1,10 +1,11 @@
 import React from "react";
 
-const CreateButton = ({ isCreating, setIsCreating }) => {
+const CreateButton = ({ isCreating }) => {
   return (
     <input
       type="submit"
       value={isCreating ? "Creating Art..." : "Create"}
+      className={ isCreating ? "waitingButton" : ""}
     ></input>
   );
 };

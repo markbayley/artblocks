@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { useEffect } from "react";
 
 import Dropdown from "react-bootstrap/Dropdown";
 
@@ -11,6 +12,10 @@ const Navigation = ({ account, setAccount, provider }) => {
 
     setAccount(account);
   };
+
+  // useEffect(() => {
+  //    connectHandler();
+  // }, [account]);
 
   return (
     <nav>

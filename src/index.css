@@ -19,6 +19,7 @@ body {
   font-family: "Play";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* border-bottom: 1px solid grey; */
 }
 
 
@@ -179,6 +180,7 @@ select {
   border: 1px solid var(--clr-blue);
   width: 100%;
   margin: 0px 10px 0px 0px;
+  cursor: pointer;
 }
 
 .check {
@@ -196,13 +198,21 @@ select {
   height: 39px;
 }
 
-/* .inactiveButton {
-  background-color: white;
-} */
+.waitingButton {
+  background-color: var(--clr-blue) !important;
+}
+
+.disabledButton {
+  cursor: not-allowed !important;
+  background-color: lightgray !important;
+
+}
 
 .title {
   margin: 10px 0px 0px 0px;
   color: grey;
+  text-transform: capitalize;
+  max-width: 400px;
 }
 
 .heading {
@@ -223,7 +233,7 @@ button {
 }
 
 .icon {
-  width: 200px;
+  width: 50px;
   background-color: white;
   border: 1px solid white; 
   padding: 0px;
@@ -307,12 +317,15 @@ button:hover {
 }
 
 a {
-  color: white;
+  /* color: white; */
+  color: var(--clr-orange);
   text-decoration: none;
+
 }
 
 a:hover {
-  color: white;
+  color: var(--clr-blue);
+
 }
 
 /* ------------------------------------------------------ */
@@ -328,7 +341,7 @@ a:hover {
   height: 350px;
   margin: 0 25px;
   border: 3px solid var(--clr-blue);
-  border-radius: 4px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -496,7 +509,7 @@ select {
 @media screen and (min-width: 1170px) {
   
   .thumbnails {
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(6, 1fr);
    
    
   }

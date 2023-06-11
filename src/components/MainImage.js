@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
+import placeholder from "./../placer.png"
+
 
 const MainImage = ({
   isCreating,
@@ -27,9 +29,17 @@ const MainImage = ({
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
+              width: "320px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              //  justifyContent: "space-evenly",
             }}
           >
-            <Spinner animation="border" />
+            <Spinner
+              animation="border"
+              style={{ width: "5rem", height: "5rem", color: "orange" }}
+            />
             <span>{message}</span>
           </div>
         </div>
@@ -38,7 +48,7 @@ const MainImage = ({
       return (
         <div className="">
           <img
-            src="https://www.thebeautyemporium.com.au/wp-content/uploads/woocommerce-placeholder-1024x1024.png"
+            src={placeholder}
             alt="AI generated art"
             width="350px"
           />
@@ -73,13 +83,27 @@ const MainImage = ({
 
       <div className="main-image-text">
         <p className="title">
-          {isCreating
-            ? "Your Artblock is being created..."
-            : title || description
-            ? title + ", " + description
-            : "Title, description"}
-      {metaData ? <a target="_blank" style={{color: "black"}} href={metaData}>&nbsp;&nbsp;&nbsp;data</a> : null}
-      {url ? <a target="_blank" style={{color: "black"}} href={url}>&nbsp;&nbsp;&nbsp;url</a> : null}
+          {isCreating ? (
+            "Your Artblock is being created..."
+          ) : isMinting ? (
+            "Your Artblock is being minted..."
+          ) : !image ? (
+            "Let's Create Something!"
+          ) : (
+            <>
+              {title + ", " + "'" + description + "'"}
+              { metaData &&
+                <>
+                  <a target="_blank" href={metaData}>
+                    &nbsp;&nbsp;&nbsp;Data
+                  </a>
+                  <a target="_blank" href={url}>
+                    &nbsp;&nbsp;&nbsp;URL
+                  </a>
+                </>
+            }
+            </>
+          )}
         </p>
       </div>
     </div>
