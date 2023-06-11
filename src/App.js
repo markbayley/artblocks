@@ -18,9 +18,6 @@ import Keywords from "./components/Keywords";
 import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
 
-
-
-
 function App() {
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
@@ -33,17 +30,17 @@ function App() {
   const [metaData, setMetaData] = useState(null);
 
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [artist, setArtist] = useState("");
+  const [description, setDescription] = useState("little boats");
+  const [artist, setArtist] = useState("Cézanne");
   const [medium, setMedium] = useState("");
-  const [pattern, setPattern] = useState("");
+  const [pattern, setPattern] = useState("Dots");
   const [keyword, setKeyword] = useState("");
-  const [selectedStyle, setSelectedStyle] = useState("Expressionism");
+  const [selectedStyle, setSelectedStyle] = useState("Impressionism");
   const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState("Landscape");
+  const [selectedSubject, setSelectedSubject] = useState("Seascape");
 
   const [message, setMessage] = useState("");
-  // const [isWaiting, setIsWaiting] = useState(false);
+
   const [isCreating, setIsCreating] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [mintingIndex, setMintingIndex] = useState(0);
@@ -52,23 +49,22 @@ function App() {
   const [transaction, setTransaction] = useState();
   const [thumbs, setThumbs] = useState([]);
 
-
+  // localStorage.clear();
   useEffect(() => {
     if (thumbs.length > 0) {
-    localStorage.setItem('thumbs', JSON.stringify(thumbs));
+      localStorage.setItem("thumbs", JSON.stringify(thumbs));
     }
-    setMintingIndex(thumbs.length);
+   
   }, [thumbs]);
 
   useEffect(() => {
-    const thumbs = JSON.parse(localStorage.getItem('thumbs'));
+    const thumbs = JSON.parse(localStorage.getItem("thumbs"));
     if (thumbs) {
-     setThumbs(thumbs);
+      setThumbs(thumbs);
     }
-}, []);
+  }, []);
 
-
-
+  // Load NFT Contract
   const loadBlockchainData = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
@@ -81,39 +77,34 @@ function App() {
       provider
     );
     setNFT(nft);
-    console.log(nft.address);
+
   };
 
-
-  // Form Request
+  // Create Image Button
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    createImage();
+
     setURL(null);
     setMetaData(null);
-    const imageData = createImage();
-  
- 
+   
   };
 
-
+  // Upload & Mint NFT Button
   const mintHandler = async (e, imageData) => {
     e.preventDefault();
 
-
     const url = await uploadImage(imageData);
-   
     await mintImage(url);
 
- 
     setIsMinting(false);
- 
     setMessage("");
-
-    // e.target.reset();
     setKeyword([]);
     setActive([]);
   };
 
+  // Create Image Function
   const createImage = async () => {
     setIsCreating(true);
     setMessage("Generating Image...");
@@ -150,28 +141,25 @@ function App() {
           pattern,
 
         options: { wait_for_model: true },
-       
       }),
       responseType: "arraybuffer",
-     
     });
-    
+
     const type = response.headers["content-type"];
     const data = response.data;
- 
+
     const base64data = Buffer.from(data).toString("base64");
     const img = `data:${type};base64,` + base64data;
 
     setImage(img);
 
     setMessage("Image Created...");
-    
+
     setIsCreating(false);
     return data;
-   
   };
 
-
+   // Upload Function
   const uploadImage = async (imageData) => {
     setIsMinting(true);
     console.log("isMinting", isMinting);
@@ -208,7 +196,7 @@ function App() {
       transaction: transaction,
       contract: nft.address,
     });
-     console.log("nft.address", nft.address);
+    console.log("nft.address", nft.address);
     // const status = await nftstorage.check('bafyreihzgvzbwi7hklznod44nu36kfl4a2fymgwah5rxwnvnq4ydx7mwb4')
     // console.log("status", status);
 
@@ -220,55 +208,56 @@ function App() {
     const metaData = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
     setMetaData(metaData);
 
-    const newThumb = ([
-      account,
-      title,
-      description,
-      artist,
-      medium,
-      keyword,
-      pattern,
-      selectedSubject,
-      selectedColors,
-      selectedStyle,
-      url,
-      transaction,
-      metaData,
-    ]);
+    // const newThumb = [
+    //   account,
+    //   title,
+    //   description,
+    //   artist,
+    //   medium,
+    //   keyword,
+    //   pattern,
+    //   selectedSubject,
+    //   selectedColors,
+    //   selectedStyle,
+    //   url,
+    //   transaction,
+    //   metaData,
+    //   nft.address,
+    // ];
 
     const newItem = [
       {
-      account: account,
-      name: name,
-      description: description,
-      artist: artist,
-      medium: medium,
-      keyword: keyword,
-      pattern: pattern,
-      selectedSubject: selectedSubject,
-      selectedColors: selectedColors,
-      selectedStyle: selectedStyle,
-      url: url,
+        account: account,
+        title: title,
+        description: description,
+        data: [ 
+          title,
+          description,
+          artist,
+          medium,
+          keyword,
+          pattern,
+          selectedSubject,
+          selectedColors,
+          selectedStyle,
+        ],
+        url: url,
+        transaction: transaction,
+        contract: nft.address,
+        metaData: metaData,
+
       }
     ];
 
-
-    
-    setThumbs([...thumbs, newThumb]);
-   
+    setThumbs([...thumbs, ...newItem]);
+    setMintingIndex(thumbs.length);
     // setItems((prevArr) => ([...prevArr, newItem]));
 
-    
-
-
     return url;
-
   };
 
-  
-
+  // Mint Function
   const mintImage = async (tokenURI) => {
-
     console.log("tokenURI:", tokenURI);
     setMessage("Click 'Confirm' in Metamask to Mint...");
 
@@ -277,21 +266,24 @@ function App() {
       .connect(signer)
       .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
     await transaction.wait();
-   
-    
-  
+
     console.log("signer:", signer);
     // console.log("transaction:", transaction);
-    console.log("transaction.hash:", transaction.hash); 
+    console.log("transaction.hash:", transaction.hash);
     const hash = transaction.hash;
-    setTransaction(hash)
+    setTransaction(hash);
     uploadImage(transaction);
   };
-  
- 
+
   useEffect(() => {
     loadBlockchainData();
   }, []);
+
+  console.log("thumbs", thumbs);
+  console.log("mintingIndex", mintingIndex);
+  console.log("thumbs.length", thumbs.length);
+  console.log("isCreating", isCreating);
+  console.log("isMinting", isMinting);
 
   return (
     <div>
@@ -326,17 +318,28 @@ function App() {
             setSelectedSubject={setSelectedSubject}
             setKeyword={setKeyword}
           />
-<div style={{display: "flex", width: "100%", justifyContent: "space-between"}}>
-          <CreateButton isCreating={isCreating} />
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <CreateButton isCreating={isCreating} />
 
-          <input onClick={mintHandler}
-      type="submit"
-
-      value={isMinting ? "Minting Art..." : "Mint"}
-      className={ isMinting ? "waitingButton" : !image || url ? "disabledButton" : ""}
-    ></input>
-    </div>
-       
+            <input
+              onClick={mintHandler}
+              type="submit"
+              value={isMinting ? "Minting Art..." : "Mint"}
+              className={
+                isMinting
+                  ? "waitingButton"
+                  : !image || url
+                  ? "disabledButton"
+                  : ""
+              }
+            ></input>
+          </div>
         </form>
         <MainImage
           isCreating={isCreating}
@@ -360,12 +363,10 @@ function App() {
           account={account}
           isMinting={isMinting}
           transaction={transaction}
-
         />
       ) : (
         <div className="heading">
           Connect to account to view minted Artblocks
-     
         </div>
       )}
     </div>

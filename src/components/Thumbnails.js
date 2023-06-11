@@ -15,8 +15,6 @@ const Thumbnails = ({
 }) => {
   const [lgShow, setLgShow] = useState(false);
   const [modalData, setModalData] = useState([]);
-  // console.log("storedThumbsT", storedThumbs);
-  const [loaded, setLoaded] = useState(false);
 
   return (
     <>
@@ -27,43 +25,43 @@ const Thumbnails = ({
         ) : (
           thumbs.map((item, index) => (
             <>
+         
               {/* && image && index !== mintingIndex */}
               {!isCreating && !isMinting   ? (
                 <div className="" onClick={() => setLgShow(true)} key={index}>
-                
-                  <div className="thumbnail">
+                  
+                  <div className="thumbnail" >
                     <img
                       key={index}
-                      onLoad={() => setLoaded(true)}
-                      style={loaded ? {} : { display: 'none' }}
-                      src={item[10]}
+                      src={item.url}
                       alt="AI thumbnail"
                       onClick={() => {
                         setModalData(item);
                         // setLgShow(true);
                       }}
                     />
-                    <>
-                      &nbsp;{item[1]}
-                      <em>"{item[2]}"</em>
+                  <div style={{textTransform: "capitalize"}}>
+                      &nbsp;{item.title}
+                      <em>"{item.description}"</em>
                       <a
                         target="_blank"
                   
-                        href={item[10]}
+                        href={item.url}
                       >
                         &nbsp;&nbsp;&nbsp;URL
                       </a>
-                    </>
+                    </div>
                   </div>
                 </div>
-              ) : isCreating || isMinting && (index + 1) !== mintingIndex ? (
+              ) : isCreating || isMinting && (index) !== mintingIndex ? (
                 <div className="" onClick={() => setLgShow(true)} key={index}>
-                  {item[10] ? (
-                    <div className="thumbnail">
-                      2 
+                  {item.url ? (
+                    <div className="thumbnail"  >
+                      {/* {index} ,{mintingIndex} */}
+                     
                       <img
                         key={index}
-                        src={item[10]}
+                        src={item.url}
                         alt="AI thumbnail"
                         onClick={() => {
                           setModalData(item);
@@ -71,12 +69,12 @@ const Thumbnails = ({
                         }}
                       />
                       <>
-                        &nbsp;{item[1]}
-                        <em>"{item[2]}"</em>
+                        &nbsp;{item.title}
+                        <em>"{item.description}"</em>
                         <a
                           target="_blank"
                         
-                          href={item[10]}
+                          href={item.url}
                         >
                           &nbsp;&nbsp;&nbsp;URL
                         </a>
@@ -87,11 +85,50 @@ const Thumbnails = ({
                     : ( "3"
                   )}
                 </div>
-              ) : "4"}
+              ) :  
+              <div  >
+                {/* n/a {index} ,{mintingIndex} */}
+              <div
+             className="thumbnail loading"
+            
+              >
+                  <img
+                        key={index}
+                        src={item.url}
+                        alt="AI thumbnail"
+                        onClick={() => {
+                          setModalData(item);
+                          // setLgShow(true);
+                        }}
+                      />
+                {/* <Spinner
+                  animation="border"
+                  style={{ width: "5rem", height: "5rem", color: "orange" }}
+                /> */}
+                {/* <span>loading...</span> */}
+                <>
+                        &nbsp;{item.title}
+                        <em>"{item.description}"</em>
+                        <a
+                          target="_blank"
+                        
+                          href={item.url}
+                        >
+                          &nbsp;&nbsp;&nbsp;URL
+                        </a>
+                      </>
+              </div>
+            </div>
+               
+              
+              
+              
+              
+              }
   
             </>
           ))
-          // .reverse()
+          .reverse()
         )}
       </div>
 
@@ -102,13 +139,13 @@ const Thumbnails = ({
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-lg">
-            {modalData[1]}&nbsp;<em>"{modalData[2]}"</em> - &nbsp;{" "}
+          <Modal.Title id="example-modal-sizes-title-lg" className="title">
+            {modalData.title},&nbsp;<em>"{modalData.description}"</em>&nbsp;&nbsp;{" "} <a  target="_blank" href={modalData.metaData}>Data</a> &nbsp;&nbsp;<a  target="_blank" href={modalData.url}>URL</a>
             {/* {modalData[11].slice(0, 6) + "..." + modalData[11].slice(38, 42)} */}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={modalData[10]} alt="AI thumbnail" />
+          <img src={modalData.url} alt="AI thumbnail" />
         </Modal.Body>
       </Modal>
     </>

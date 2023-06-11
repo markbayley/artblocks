@@ -109,7 +109,7 @@ const InputFields = ({
 }) => {
   return (
     <>
-      <div className="tabs">
+      <div className="">
         <input
           required
           type="text"

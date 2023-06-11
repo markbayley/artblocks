@@ -109,8 +109,8 @@ const Keywords = ({setPattern, selectedSubject, setSelectedSubject, active, setA
           ))}
         </select>
       </div>
-      <div className="title">Keywords</div>
-      <div className="tabs">
+      {/* <div className="title">Keywords</div> */}
+      <div className="check tabs">
         {uniqueKeywords.slice(0, 6).map((item, index) => (
           <button
             key={index}

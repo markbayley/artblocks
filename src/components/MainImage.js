@@ -29,18 +29,22 @@ const MainImage = ({
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "320px",
+              width: "350px",
+              height: "350px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              //  justifyContent: "space-evenly",
+              backgroundImage: `url(${image})`,
+              backgroundSize: "350px 350px",
+              filter: "greyscale(50%)",
+               justifyContent: "center",
             }}
           >
             <Spinner
               animation="border"
-              style={{ width: "5rem", height: "5rem", color: "orange" }}
+              style={{ width: "5rem", height: "5rem", color: "#f8b817" }}
             />
-            <span>{message}</span>
+            <span style={{background: "#4c46b6", color: "#fff", padding: "10px", borderRadius: "5px", boxShadow: "1px 1px gray", marginTop: "15px"}}>{message}</span>
           </div>
         </div>
       );
