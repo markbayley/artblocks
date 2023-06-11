@@ -175,9 +175,10 @@ function App() {
   };
 
 
-  const uploadImage = async (imageData, img) => {
+  const uploadImage = async (imageData) => {
     setIsMinting(true);
-    setMessage("Creating Image...");
+    console.log("isMinting", isMinting);
+    setMessage("Saving Image Remotely...");
     // Create instance to NFT.Storage
 
     const nftstorage = new NFTStorage({
@@ -192,7 +193,7 @@ function App() {
     const url = `https://ipfs.io/ipfs/${imageHash}/`;
 
     // Send request to store image
-    setMessage("Sending request...");
+    setMessage("Storing Image Details...");
     const { ipnft } = await nftstorage.store({
       image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
       blob: blob,
@@ -216,8 +217,8 @@ function App() {
     const metaData = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
     setMetaData(metaData);
 
-       thumbs.push([
-      img,
+      thumbs.push([
+      account,
       title,
       description,
       artist,
@@ -238,7 +239,7 @@ function App() {
 
   const mintImage = async (tokenURI) => {
     console.log("tokenURI:", tokenURI);
-    setMessage("Click 'Confirm' in Metamask...");
+    setMessage("Click 'Confirm' in Metamask to Mint...");
 
     const signer = await provider.getSigner();
     const transaction = await nft
@@ -247,6 +248,7 @@ function App() {
     await transaction.wait();
    
     setIsMinting(false);
+    console.log("isMinting", isMinting);
     console.log("signer:", signer);
     console.log("transaction:", transaction);
     console.log("transactionF:", transaction.from);
@@ -255,7 +257,7 @@ function App() {
 
   useEffect(() => {
     loadBlockchainData();
-  }, []);
+  }, [account]);
 
 
   return (
@@ -303,6 +305,7 @@ function App() {
 
         <MainImage
           isCreating={isCreating}
+          isMinting={isMinting}
           image={image}
           message={message}
           medium={medium}
@@ -319,6 +322,7 @@ function App() {
           isCreating={isCreating}
           image={image}
           mintingIndex={mintingIndex}
+          account={account}
         />
       ) : (
         <div className="heading">

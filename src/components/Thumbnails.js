@@ -2,13 +2,13 @@ import { useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 
-const Thumbnails = ({ thumbs, isCreating, image, mintingIndex, url }) => {
+const Thumbnails = ({ thumbs, isCreating, image, mintingIndex, url, account }) => {
   const [lgShow, setLgShow] = useState(false);
   const [modalData, setModalData] = useState([]);
 
   return (
     <>
-      <div className="heading">My Artblocks</div>
+      <div className="heading">Minted Artblocks</div>
       <div className="thumbnails">
         {thumbs.length === 0 ? (
           <div className="text__placeholder">No Artblocks minted</div>
@@ -16,7 +16,7 @@ const Thumbnails = ({ thumbs, isCreating, image, mintingIndex, url }) => {
           thumbs
             .map((item, index) => (
               <>
-                {!isCreating && image && index !== mintingIndex ? (
+                {!isCreating && image && index !== mintingIndex && item[0] === account ? (
                   <div className="" onClick={() => setLgShow(true)}  key={index}>
                     <div className="thumbnail">
                       <img

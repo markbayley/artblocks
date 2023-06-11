@@ -4,6 +4,7 @@ import Modal from "react-bootstrap/Modal";
 
 const MainImage = ({
   isCreating,
+  isMinting,
   title,
   description,
   medium,
@@ -15,9 +16,9 @@ const MainImage = ({
   const [lgShow, setLgShow] = useState(false);
 
   const renderImage = () => {
-    if (!isCreating && image) {
+    if (!isCreating && !isMinting && image) {
       return <img src={image} alt="AI generated image" />;
-    } else if (isCreating) {
+    } else if (isCreating || isMinting) {
       return (
         <div style={{ position: "relative", width: "350px", height: "350px" }}>
           <div
