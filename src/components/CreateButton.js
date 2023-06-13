@@ -13,16 +13,21 @@ const CreateButton = ({ isCreating, mintHandler, isMinting, image, url }) => {
     <input
       type="submit"
       value={isCreating ? "Creating Art..." : "Create"}
-      className={ isCreating ? "waitingButton" : ""}
+      className={ 
+        isCreating 
+        ? "waitingButton" 
+        : isMinting ?
+        "disabledButton"
+        : ""}
     ></input>
     <input
     onClick={mintHandler}
     type="submit"
     value={isMinting ? "Minting Art..." : "Mint"}
     className={
-      isMinting
+      isMinting 
         ? "waitingButton"
-        : !image || url
+        : !image || url || isCreating
         ? "disabledButton"
         : ""
     }

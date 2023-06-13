@@ -160,7 +160,7 @@ function App() {
   };
 
   // Upload Function
-  const uploadImage = async (imageData) => {
+  const uploadImage = async (imageData, tokenURI) => {
     setIsMinting(true);
     console.log("isMinting", isMinting);
     setMessage("Saving Image Remotely...");
@@ -175,6 +175,31 @@ function App() {
 
     const url = `https://ipfs.io/ipfs/${imageHash}/`;
 
+    
+
+    
+    // console.log("tokenURI:", tokenURI);
+    setMessage("Click 'Confirm' in Metamask to Mint...");
+
+    const signer = await provider.getSigner();
+    const transaction = await nft
+      .connect(signer)
+      .mint(url, { value: ethers.utils.parseUnits("1", "ether") });
+    await transaction.wait();
+   console.log("transactionI:", transaction);
+    // console.log("signer:", signer);
+
+    const hash = transaction.hash;
+    console.log("hashI:", hash);
+   
+    // await uploadImage(hash);
+    setTransactionHash(hash);
+    console.log("transactionHashI:", transactionHash);
+
+
+
+
+
     const date = `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`;
     console.log("date", date);
 
@@ -187,7 +212,7 @@ function App() {
       name: name,
       description: description,
       contract: nft.address,
-      hash: transactionHash,
+      hash: hash,
       owner: account,
       date: date,
       inputData: [
@@ -230,7 +255,7 @@ function App() {
           style,
         ],
         url: url,
-        hash: transactionHash,
+        hash: hash,
         contract: nft.address,
         metaData: metaData,
         date: date,
@@ -248,21 +273,21 @@ function App() {
   // Mint Function
   const mintImage = async (tokenURI) => {
     console.log("tokenURI:", tokenURI);
-    setMessage("Click 'Confirm' in Metamask to Mint...");
+    setMessage("Success! Minted NFT");
 
-    const signer = await provider.getSigner();
-    const transaction = await nft
-      .connect(signer)
-      .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
-    await transaction.wait();
+    // const signer = await provider.getSigner();
+    // const transaction = await nft
+    //   .connect(signer)
+    //   .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
+    // await transaction.wait();
 
-    console.log("signer:", signer);
+    // console.log("signer:", signer);
 
-    const hash = transaction.hash;
+    // const hash = transaction.hash;
 
 
-    // await uploadImage(hash);
-    setTransactionHash(hash);
+    // // await uploadImage(hash);
+    // setTransactionHash(hash);
   };
 
   console.log("thumbs", thumbs);
@@ -270,8 +295,8 @@ function App() {
     loadBlockchainData();
   }, []);
 
-  console.log("thumbs", thumbs);
-  console.log("transactionHashE:", transactionHash);
+ 
+
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />

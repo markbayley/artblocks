@@ -18,6 +18,8 @@ const MainImage = ({
 }) => {
   const [lgShow, setLgShow] = useState(false);
 
+  console.log("transactionHashE:", transactionHash);
+
   const renderImage = () => {
     if (!isCreating && !isMinting && image) {
       return <img src={image} alt="AI generated image" />;

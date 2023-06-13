@@ -16,6 +16,8 @@ const Thumbnails = ({
   const [lgShow, setLgShow] = useState(false);
   const [modalData, setModalData] = useState([]);
 
+  console.log("thumbs", thumbs);
+
   return (
     <>
       <div className="heading">Minted Artblocks</div>
