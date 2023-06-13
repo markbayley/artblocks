@@ -35,7 +35,7 @@ const Navigation = ({ account, setAccount }) => {
                 >
                     {account.slice(0, 6) + '...' + account.slice(38, 42)}
                 </button>
-             
+     
                </div>
             ) : (
                 <div>
@@ -53,7 +53,7 @@ const Navigation = ({ account, setAccount }) => {
                 >
                     Connect
                 </button>
-        
+     
              </div>
             )}
          

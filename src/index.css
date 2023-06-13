@@ -19,12 +19,21 @@ body {
   font-family: "Play";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+
 }
 
 
-/* a {
-  font-size: 14px;
-} */
+
+a {
+  /* color: white; */
+  color: var(--clr-orange);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--clr-blue);
+}
 
 /* ------------------------------------------------------ */
 /* -- NAVIGATION -- */
@@ -84,36 +93,47 @@ nav {
   background-color: var(--clr-blue-2);
 }
 
+.provider {
+  display: flex;
+  justify-content: end;
+  margin-right: 25px;
+  font-size: 0.8em;
+  color:#f81717;
+}
+
 /* ------------------------------------------------------ */
 /* -- FORM -- */
 
-.form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 420px;
-}
+
 
 form {
   display: flex;
-  justify-content: center;
+  justify-content: center; 
   align-items: flex-start;
   flex-direction: column;
   margin: 0 25px;
 }
 
-form input[type="text"] {
-  width: 300px;
-  /* height: 50px; */
-  margin: 10px 10px 0px 0px;
-  padding: 10px 10px 5px 10px;
+.form {
+  display: flex;
+   justify-content: center;
+  align-items: center; 
+  min-height: 420px;
+  margin: 10px !important;
+}
 
+form input[type="text"] {
+  min-width: 25vw;
+  height: 50px;
+  /* margin: 10px 0px 0px 0px; */
+  padding: 10px 0px 0px 15px;
   border: none;
   border-bottom: 1px solid var(--clr-blue);
-  /* border-radius: 4px; */
 
-  /* font-size: 1.10em; */
- 
+}
+
+input + input {
+  margin-left: 10px;
 }
 
 form input[type="submit"] {
@@ -144,11 +164,9 @@ form input[type="submit"]:disabled {
   background-color: grey;
 }
 
-form input[type="checkbox"]  {
- 
+form input[type="checkbox"]  { 
   width: 25px;
   height: 25px;
-
 }
 
 select {
@@ -156,25 +174,36 @@ select {
   border-radius: 4px;
   border: 1px solid var(--clr-blue);
   width: 100%;
-  margin: 0px 10px 0px 0px;
+  /* margin: 0px 10px 0px 0px; */
+  cursor: pointer;
 }
+
+select + select {
+  margin-left: 10px;
+}
+
 
 .check {
   display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
-
-.activeButton {
+.checked {
   background-color: var(--clr-blue);
-  color: white;
 }
 
-.inactiveButton {
+.unchecked {
   background-color: white;
+}
+
+.tabs {
+  /* padding-top: 10px; */
+ display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .title {
@@ -187,52 +216,41 @@ select {
   color: grey;
 }
 
+.activeButton {
+  background-color: var(--clr-blue);
+  color: white;
+  height: 39px;
+}
 
+.waitingButton {
+  background-color: var(--clr-blue) !important;
+}
+
+.disabledButton {
+  cursor: not-allowed !important;
+  background-color: lightgray !important;
+
+}
 
 button {
-  width: 100px;
+  /* width: 15%; */
+  width: 15%;
   height: 40px;
-  margin: 5px 5px 5px 0px;
+  /* margin-top: 5px;  */
   padding: 5px;
   background-color: white;
   border: 1px solid var(--clr-blue);
-  border-radius: 25px;
-
+  border-radius: 5px;
 }
 
-.icon {
-  width: 200px;
-  background-color: white;
-  border: 1px solid white; 
-  padding: 0px;
-  margin: 0px;
+button + button {
+  margin-left: 10px;
 }
-
-.icon:hover {
-  width: 200px;
-  color: black;
-  background-color: white;
-  border: 1px solid white; 
-  padding: 0px;
-  margin: 0px;
-}
-
-
-
-.checked {
-  background-color: var(--clr-blue);
-}
-
-.unchecked {
-  background-color: white;
-}
-
 
 button:hover {
   background-color: var(--clr-blue);
   color: white;
   transition: all 250ms ease;
-
 }
 
 .button1 {
@@ -256,6 +274,23 @@ button:hover {
   color: #fff;
 }
 
+.icon {
+  width: 200px;
+  background-color: white;
+  border: 1px solid white; 
+  padding: 0px;
+  margin: 0px;
+}
+
+.icon:hover {
+  width: 200px;
+  color: black;
+  background-color: white;
+  border: 1px solid white; 
+  padding: 0px;
+  margin: 0px;
+}
+
 /* ------------------------------------------------------ */
 /* -- IMAGE -- */
 
@@ -267,7 +302,7 @@ button:hover {
   max-width: 90%;
   width: 350px;
   height: 350px;
-  margin: 0 25px;
+  margin: 15px 25px;
   border: 3px solid var(--clr-blue);
   border-radius: 4px;
   overflow: hidden;
@@ -296,13 +331,24 @@ button:hover {
 }
 
 
-
 .thumbnail img {
   width: 200px;
   height: 200px;
   border-radius: 6px;
   margin: 10px 10px 0px 10px;
+  cursor: pointer;
 }
+
+.loading {
+  opacity: 1;
+  animation: fade 2s  infinite;
+}
+
+@keyframes fade {
+  0%,100% { opacity: 0.2 }
+  50% { opacity: 0.5 }
+}
+
 
 .image__placeholder {
   display: flex;
@@ -312,10 +358,6 @@ button:hover {
 
 .image__placeholder p {
   margin: 0 10px;
-}
-
-.tabs {
-  padding-top: 5px;
 }
 
 .text__placeholder{
@@ -354,3 +396,4 @@ p {
     margin: 10px 10px 0px 10px;
   }
 }
+

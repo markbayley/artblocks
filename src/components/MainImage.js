@@ -1,28 +1,69 @@
 import { useState } from "react";
-
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
-import { Button } from "react-bootstrap";
+import placeholder from "./../placer.png"
+
 
 const MainImage = ({
-  isWaiting,
+  isCreating,
+  isMinting,
   title,
   description,
-  style,
   medium,
-  artist,
-  subject,
   image,
-  minting,
-  creating,
   url,
   message,
+  metaData,
+  transactionHash
 }) => {
   const [lgShow, setLgShow] = useState(false);
-  return (
-    <div >
 
-      
+  const renderImage = () => {
+    if (!isCreating && !isMinting && image) {
+      return <img src={image} alt="AI generated image" />;
+    } else if (isCreating || isMinting) {
+      return (
+        <div style={{ position: "relative", width: "350px", height: "350px" }}>
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "350px",
+              height: "350px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              backgroundImage: `url(${image})`,
+              backgroundSize: "350px 350px",
+              filter: "greyscale(50%)",
+               justifyContent: "center",
+            }}
+          >
+            <Spinner
+              animation="border"
+              style={{ width: "5rem", height: "5rem", color: "#f8b817" }}
+            />
+            <span style={{background: "#4c46b6", color: "#fff", padding: "10px", borderRadius: "5px", boxShadow: "1px 1px gray", marginTop: "15px"}}>{message}</span>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="">
+          <img
+            src={placeholder}
+            alt="AI generated art"
+            width="350px"
+          />
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div>
       <Modal
         size="lg"
         show={lgShow}
@@ -31,82 +72,60 @@ const MainImage = ({
       >
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-lg">
-            {title}&nbsp;<em>"{description}"</em> - {medium}, {style}
+            {title}&nbsp;<em>"{description}"</em> - {medium},
+            &nbsp;&nbsp;{" "}
+            <a target="_blank" href={metaData}>
+              Data
+            </a>{" "}
+            &nbsp;&nbsp;
+            <a target="_blank" href={url}>
+              URL
+            </a>
+            &nbsp;&nbsp;
+            Hash:&nbsp;{ transactionHash && (transactionHash).slice(0, 6) + "..." + transactionHash.slice(62, 66)}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="">
-            {!isWaiting && image ? (
-              <img src={image} alt="AI generated image" />
-            ) : isWaiting ? (
-              <div className="image__placeholder">
-                <Spinner animation="border" />
-                <p>{message}</p>
-              </div>
-            ) : (
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <img
-                  src={
-                    "https://www.thebeautyemporium.com.au/wp-content/uploads/woocommerce-placeholder-1024x1024.png"
-                  }
-                  alt="AI generated art"
-                  width="350px"
-                />
-              </div>
-            )}
-          </div>
+          <div className="modal-image-container">{renderImage()}</div>
         </Modal.Body>
       </Modal>
 
       <div className="image">
-        <button
-          className="icon"
-          onClick={() => setLgShow(true)}
-        >
-          {!isWaiting && image ? (
-            <img src={image} alt="AI generated image"/>
-          ) : isWaiting ? (
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "350px", height: "350px"}}>
-              <Spinner animation="border" />&nbsp;
-              <>{message}</>
-            </div>
-          ) : (
-        
-              <img
-                src={
-                  "https://www.thebeautyemporium.com.au/wp-content/uploads/woocommerce-placeholder-1024x1024.png"
-                }
-                alt="AI generated art"
-              />
-        
-          )}
+        <button className="icon" onClick={() => setLgShow(true)}>
+          {renderImage()}
         </button>
       </div>
 
-<div style={{ textAlign: "center"}}>
-      {!isWaiting && url && (
-        // <button className="icon" onClick={() => setLgShow(true)}></button>
-        ""
-      )}
-
-      {/* Main Text */}
-      {minting ? (
-     
-          <>Minting block...</>
-    
-      ) : creating ? (
-       
-          <>Your Artblock is being created...</>
-      
-      ) : (
-      
-        <>{title ? title : "Title"}&nbsp;"{description ? description : "description"}"</>
-  
-      )}
-
-</div>
+      <div className="main-image-text">
+        <p className="title">
+          {isCreating ? (
+            "Your Artblock is being created..."
+          ) : isMinting ? (
+            "Your Artblock is being minted..."
+          ) : !image ? (
+            "Let's Create Something!"
+          ) : (
+            <>
+              {title + ", " + "'" + description + "'"}
+              { metaData &&
+                <>
+                  <a target="_blank" href={metaData}>
+                    &nbsp;&nbsp;&nbsp;Data
+                  </a>
+                  <a target="_blank" href={url}>
+                    &nbsp;&nbsp;&nbsp;URL
+                  </a>
+                  &nbsp;&nbsp;
+            Hash:&nbsp;{ transactionHash && (transactionHash).slice(0, 6) + "..." + transactionHash.slice(62, 66)}
+                </>
+            }
+            </>
+          )}
+        </p>
+      </div>
     </div>
   );
 };
 
 export default MainImage;
+

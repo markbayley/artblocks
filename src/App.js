@@ -5,7 +5,6 @@ import { ethers } from "ethers";
 import axios from "axios";
 
 // Components
-import Spinner from "react-bootstrap/Spinner";
 import Navigation from "./components/Navigation";
 
 // ABIs
@@ -24,10 +23,11 @@ function App() {
   const [account, setAccount] = useState(null);
   const [nft, setNFT] = useState(null);
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState("Artblocks AI NFT Contract");
 
   const [image, setImage] = useState(null);
   const [url, setURL] = useState(null);
+  const [metaData, setMetaData] = useState(null);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -38,26 +38,33 @@ function App() {
   const [pattern, setPattern] = useState("");
   const [subject, setSubject] = useState("");
   const [keyword, setKeyword] = useState([]);
-  const [count, setCount] = useState(0);
 
   const [message, setMessage] = useState("");
-  const [isWaiting, setIsWaiting] = useState(false);
 
-  const [creating, setCreating] = useState(false);
-  const [minting, setMinting] = useState(false);
-  
-  const currentYear = new Date().getFullYear();
+  const [isCreating, setIsCreating] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintingIndex, setMintingIndex] = useState(0);
+
   const [active, setActive] = useState([]);
+  const [transactionHash, setTransactionHash] = useState();
+
   const [thumbs, setThumbs] = useState([]);
 
-  // Local Storage
-  const storedItems = JSON.parse(localStorage.getItem("items"));
-  const [items, setItems] = useState(storedItems);
+  //  localStorage.clear();
+  useEffect(() => {
+    if (thumbs.length > 0) {
+      localStorage.setItem("thumbs", JSON.stringify(thumbs));
+    }
+  }, [thumbs]);
 
   useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(items));
-  }, [items]);
+    const thumbs = JSON.parse(localStorage.getItem("thumbs"));
+    if (thumbs) {
+      setThumbs(thumbs);
+    }
+  }, []);
 
+  // Load NFT Contract
   const loadBlockchainData = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
@@ -70,38 +77,39 @@ function App() {
       provider
     );
     setNFT(nft);
-
-    const name = await nft.name();
-    console.log("name", name);
   };
 
-  // Form Request
+  // Create Image Button
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    setIsWaiting(true);
+    createImage();
 
-    const imageData = createImage();
-    const url = await uploadImage(imageData);
-
-    await mintImage(url);
-
-    setMessage("");
-    setMessage("success!");
-    setCount(count + 1);
-    // e.target.reset();
-    setKeyword([]);
-    setActive([]);
-    setIsWaiting(false);
+    setURL(null);
+    setMetaData(null);
   };
 
+  // Upload & Mint NFT Button
+  const mintHandler = async (e, imageData) => {
+    e.preventDefault();
+
+    const url = await uploadImage(imageData);
+    await mintImage(url);
+
+    setIsMinting(false);
+    setMessage("");
+    setKeyword([]);
+    setActive([]);
+  };
+
+  // Create Image Function
   const createImage = async () => {
+    setIsCreating(true);
     setMessage("Generating Image...");
-    setCreating(true);
+    // getURL(nft);
     const URL = `https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2`;
 
     // Send the request
-    setMessage("Sending the request...");
     const response = await axios({
       url: URL,
       method: "POST",
@@ -128,9 +136,10 @@ function App() {
           " " +
           colour +
           " " +
-          pattern +
+          pattern + 
           " " +
-          count,
+          account,
+
         options: { wait_for_model: true },
       }),
       responseType: "arraybuffer",
@@ -144,73 +153,102 @@ function App() {
 
     setImage(img);
 
-    console.log("Creating Thumbnail data...");
-    thumbs.push([
-      img,
-      title,
-      description,
-      style,
-      artist,
-      medium,
-      colour,
-      keyword,
-      pattern,
-      count,
-      subject,
-    ]);
+    setMessage("Image Created...");
 
-    setThumbs(thumbs);
-    console.log("thumbs", thumbs);
-
-    setItems(thumbs);
-    console.log("items", items);
-
-    setCreating(false);
-
-    console.log(localStorage);
-
+    setIsCreating(false);
     return data;
   };
 
+  // Upload Function
   const uploadImage = async (imageData) => {
-    setMessage("Uploading Image...");
+    setIsMinting(true);
+    console.log("isMinting", isMinting);
+    setMessage("Saving Image Remotely...");
     // Create instance to NFT.Storage
-    console.log("Creating instance to NFT.Storage");
+
     const nftstorage = new NFTStorage({
       token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
     });
 
+    const blob = await (await fetch(image)).blob();
+    const imageHash = await nftstorage.storeBlob(blob);
+
+    const url = `https://ipfs.io/ipfs/${imageHash}/`;
+
+    const date = `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`;
+    console.log("date", date);
+
     // Send request to store image
-    setMessage("Sending request...");
+    setMessage("Storing Image Details...");
     const { ipnft } = await nftstorage.store({
       image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
+      blob: blob,
+      creator: account,
       name: name,
       description: description,
-      style: style,
-      artist: artist,
-      medium: medium,
-      colour: colour,
-      keyword: keyword,
-      count: count,
-      subject: subject,
-      pattern: pattern,
+      contract: nft.address,
+      hash: transactionHash,
+      owner: account,
+      date: date,
+      inputData: [
+        title,
+        description,
+        artist,
+        medium,
+        keyword,
+        pattern,
+        subject,
+        colour,
+        style,
+      ],
+      imageURL: url,
     });
+    console.log("nft.address", nft.address);
 
     // Save the URL
     setMessage("Saving the URL");
-    const url = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
-    setURL(url);
-    setMinting(false);
 
-    console.log("active", active);
-    console.log("keyword", keyword);
-    console.log("url", url);
+    // await createImage(url); // Pass the URL to createImage
+    setURL(url);
+    const metaData = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
+    setMetaData(metaData);
+
+    const newItem = [
+      {
+        account: account,
+        title: title,
+        description: description,
+        data: [
+          title,
+          description,
+          artist,
+          medium,
+          keyword,
+          pattern,
+          subject,
+          colour,
+          style,
+        ],
+        url: url,
+        hash: transactionHash,
+        contract: nft.address,
+        metaData: metaData,
+        date: date,
+      },
+    ];
+
+    setThumbs([...thumbs, ...newItem]);
+
+    setMintingIndex(thumbs.length);
+    // setItems((prevArr) => ([...prevArr, newItem]));
 
     return url;
   };
 
+  // Mint Function
   const mintImage = async (tokenURI) => {
-    setMessage("Click 'Confirm' in Metamask...");
+    console.log("tokenURI:", tokenURI);
+    setMessage("Click 'Confirm' in Metamask to Mint...");
 
     const signer = await provider.getSigner();
     const transaction = await nft
@@ -218,241 +256,29 @@ function App() {
       .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
     await transaction.wait();
 
-    console.log("transaction", transaction);
+    console.log("signer:", signer);
+
+    const hash = transaction.hash;
+
+
+    // await uploadImage(hash);
+    setTransactionHash(hash);
   };
 
+  console.log("thumbs", thumbs);
   useEffect(() => {
     loadBlockchainData();
   }, []);
 
-  useEffect(() => {
-    loadBlockchainData();
-  }, []);
-
-  const artists = [
-    {
-      name: "Artist",
-    },
-    {
-      name: "Picasso",
-    },
-    {
-      name: "Dali",
-    },
-    {
-      name: "Van Gogh",
-    },
-    {
-      name: "Rembrandt",
-    },
-    {
-      name: "Cézanne",
-    },
-    {
-      name: "Klimt",
-    },
-    {
-      name: "Matisse",
-    },
-    {
-      name: "Pollock",
-    },
-    {
-      name: "Rothko",
-    },
-  ];
-
-  const styles = [
-    {
-      name: "Style",
-    },
-    {
-      name: "Abstract",
-    },
-    {
-      name: "Expressionism",
-    },
-    {
-      name: "Pop Art",
-    },
-    {
-      name: "Surrealism",
-    },
-    {
-      name: "Realism",
-    },
-    {
-      name: "Minimalism",
-    },
-    {
-      name: "Impressionism",
-    },
-    {
-      name: "Cubism",
-    },
-    {
-      name: "Modernism",
-    },
-  ];
-
-  const mediums = [
-    {
-      name: "Medium",
-    },
-    {
-      name: "Watercolor",
-    },
-    {
-      name: "Oil",
-    },
-    {
-      name: "Charcoal",
-    },
-    {
-      name: "Ink",
-    },
-    {
-      name: "Gouche",
-    },
-    {
-      name: "Acrylic",
-    },
-    {
-      name: "Pencil",
-    },
-    {
-      name: "Pastels",
-    },
-  ];
-
-  const colours = [
-    {
-      name: "Colour",
-    },
-    {
-      name: "Turquoise",
-    },
-    {
-      name: "Lime Green",
-    },
-    {
-      name: "Yellow Ochre",
-    },
-    {
-      name: "Raw Sienna",
-    },
-    {
-      name: "Fushcia",
-    },
-    {
-      name: "Coral Pink",
-    },
-    {
-      name: "Crimson",
-    },
-    {
-      name: "Mauve",
-    },
-    {
-      name: "Goldenrod",
-    },
-  ];
-
-  const patterns = [
-    {
-      name: "Pattern",
-    },
-    {
-      name: "Stripes",
-    },
-    {
-      name: "Checkered",
-    },
-    {
-      name: "Dots",
-    },
-    {
-      name: "Zig Zags",
-    },
-    {
-      name: "Curves",
-    },
-    {
-      name: "Speckled",
-    },
-    {
-      name: "Swirls",
-    },
-    {
-      name: "Spiked",
-    },
-    {
-      name: "Soft",
-    },
-    {
-      name: "Angular",
-    },
-  ];
-
-  const subjects = [
-    {
-      name: "Subject",
-    },
-    {
-      name: "Landscape",
-    },
-    {
-      name: "Portrait",
-    },
-    {
-      name: "Seascape",
-    },
-    {
-      name: "Figure",
-    },
-    {
-      name: "Fruit Bowl",
-    },
-  ];
-
-  const words = [
-    { key: ["trees", "farm", "sky", "lake", "hills", "clouds"] },
-    { key: ["face", "smile", "dress", "jewels", "mouth", "family"] },
-    { key: ["boats", "fish", "beach", "cliffs", "island", "sand"] },
-    { key: ["man", "woman", "child", "slumped", "arms", "thin"] },
-    { key: ["apple", "pear", "fresh", "banana", "colorful", "wooden"] },
-    { key: ["street", "beach", "face", "woman", "colorful", "hills"] },
-  ];
-
-  // Toggle Buttons
-  const handleChecked = (e) => {
-    e.preventDefault();
-
-    // setDescription((prevArr) => [...prevArr, " " + e.target.value]);
-
-    // active.push(e.target.value)
-    // setActive(active + ", " + e.target.value)
-    setActive((prevArr) =>
-      prevArr.includes(e.target.value)
-        ? [...prevArr.pop()]
-        : [...prevArr, " " + e.target.value]
-    );
-
-    // setKeyword(keyword + ", " + e.currentTarget.value)
-
-    setKeyword((prevArr) => [...prevArr, " " + e.target.value]);
-
-    // keyword.slice(1)
-    // keyword.push(e.target.value)
-  };
-
-  // const clearHandler = async (e) => {
-  //   e.target.reset();
-  // };
-
+  console.log("thumbs", thumbs);
+  console.log("transactionHashE:", transactionHash);
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
+      <div className="provider">
+        {" "}
+        {provider ? "" : "Install MetaMask to Connect"}
+      </div>
 
       <div className="form">
         <form onSubmit={submitHandler}>
@@ -465,60 +291,57 @@ function App() {
             setColour={setColour}
             setArtist={setArtist}
             setPattern={setPattern}
-            subjects={subjects}
-            styles={styles}
-            mediums={mediums}
-            patterns={patterns}
-            artists={artists}
-            colours={colours}
           />
 
           <Keywords
-            words={words}
             subject={subject}
             active={active}
-            handleChecked={handleChecked}
+            setPattern={setPattern}
+            setSubject={setSubject}
+            setActive={setActive}
+            setKeyword={setKeyword}
           />
 
           <CreateButton
+            isCreating={isCreating}
+            isMinting={isMinting}
             image={image}
-            creating={creating}
-            isWaitng={isWaiting}
+            mintHandler={mintHandler}
+            url={url}
           />
         </form>
 
         <MainImage
-          isWaiting={isWaiting}
           image={image}
           message={message}
-          style={style}
           medium={medium}
-          artist={artist}
           subject={subject}
           description={description}
-          minting={minting}
-          creating={creating}
+          isMinting={isMinting}
+          isCreating={isCreating}
           url={url}
           title={title}
+          metaData={metaData}
+          transactionHash={transactionHash}
         />
       </div>
 
-      <Thumbnails
-        url={url}
-        items={items}
-        thumbs={thumbs}
-        isWaiting={isWaiting}
-        image={image}
-        message={message}
-        style={style}
-        medium={medium}
-        artist={artist}
-        subject={subject}
-        description={description}
-        minting={minting}
-        creating={creating}
-        title={title}
-      />
+      {account ? (
+        <Thumbnails
+          url={url}
+          thumbs={thumbs}
+          isCreating={isCreating}
+          image={image}
+          mintingIndex={mintingIndex}
+          account={account}
+          isMinting={isMinting}
+        
+        />
+      ) : (
+        <div className="heading">
+          Connect to account to view minted Artblocks
+        </div>
+      )}
     </div>
   );
 }

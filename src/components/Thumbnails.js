@@ -1,41 +1,82 @@
 import { useState } from "react";
-
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
-import { Button } from "react-bootstrap";
 
-const Thumbnails = ({ thumbs }) => {
+const Thumbnails = ({
+  thumbs,
+  isCreating,
+  image,
+  mintingIndex,
+  url,
+  account,
+  storedThumbs,
+  isMinting,
+  transactionHash,
+}) => {
   const [lgShow, setLgShow] = useState(false);
   const [modalData, setModalData] = useState([]);
 
   return (
     <>
-      <div className="heading">My Artblocks</div>
+      <div className="heading">Minted Artblocks</div>
       <div className="thumbnails">
-        {thumbs.length === 0  ? <div className="text__placeholder">No Artblocks minted</div> :
-          thumbs.map((item, index) => (
-            <>
-              <button className="icon" onClick={() => setLgShow(true)}>
-                <div className="thumbnail" key={index}>
-                  <img
-                    src={item[0]}
-                    alt="AI thumbnail"
-                    onClick={() => {
-                      setModalData(item);
-                      // setLgShow(true);
-                    }}
-                  />
-                  <>
-                    &nbsp;{item[1]}
-                    <em>"{item[2]}"</em>
-                  </>
-                </div>
-              </button>
-            </>
-          ))
-          .reverse()}
+        {thumbs.length === 0 ? (
+          <div className="text__placeholder">No Artblocks minted</div>
+        ) : (
+          thumbs
+            .map((item, index) => (
+              <>
+            
+                { item.account === account && ((!isCreating && !isMinting) ||
+                isCreating ||
+                (isMinting && index !== mintingIndex)) ? (
+                  <div className="" onClick={() => setLgShow(true)} key={index}>
+                    <div className="thumbnail"  key={index}>
+                      <img
+                        key={index}
+                        src={item.url}
+                        alt="AI thumbnail"
+                        onClick={() => {
+                          setModalData(item);
+                          // setLgShow(true);
+                        }}
+                      />
+                      <div style={{ textTransform: "capitalize" }}>
+                        &nbsp;{item.title}
+                        <em>"{item.description}"</em>
+                        <a target="_blank" href={item.url}>
+                          &nbsp;&nbsp;&nbsp;URL
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  item.account === account &&
+                  <div  key={index}>
+                    <div className="thumbnail loading"  key={index}>
+                      <img
+                        key={index}
+                        src={item.url}
+                        alt="AI thumbnail"
+                        onClick={() => {
+                          setModalData(item);
+                        }}
+                      />
+                      <>
+                        &nbsp;{item.title}
+                        <em>"{item.description}"</em>
+                        <a target="_blank" href={item.url}>
+                          &nbsp;&nbsp;&nbsp;URL
+                        </a>
+                      </>
+                    </div>
+                  </div>
+                )}
+              </>
+            ))
+            .reverse()
+        )}
       </div>
-
       <Modal
         size="lg"
         show={lgShow}
@@ -43,17 +84,28 @@ const Thumbnails = ({ thumbs }) => {
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-lg">
-            {modalData[1]}&nbsp;<em>"{modalData[2]}"</em> - {modalData[5]}&nbsp;{" "}
-            {modalData[10]} - {modalData[3]}
+          <Modal.Title id="example-modal-sizes-title-lg" className="title">
+            {modalData.title},&nbsp;<em>"{modalData.description}"</em>
+            &nbsp;&nbsp;{" "}
+            <a target="_blank" href={modalData.metaData}>
+              Data
+            </a>{" "}
+            &nbsp;&nbsp;
+            <a target="_blank" href={modalData.url}>
+              URL
+            </a>
+            &nbsp;&nbsp;
+            Hash:&nbsp;{ modalData.hash && (modalData.hash).slice(0, 6) + "..." + modalData.hash.slice(62, 66)}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={modalData[0]} alt="AI thumbnail" />
+          <img src={modalData.url} alt="AI thumbnail" width="100%"/>
         </Modal.Body>
       </Modal>
+      
     </>
   );
 };
 
 export default Thumbnails;
+

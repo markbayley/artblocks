@@ -1,24 +1,34 @@
 import React from 'react'
 
-const CreateButton = ({image, creating, isWaiting }) => {
+const CreateButton = ({ isCreating, mintHandler, isMinting, image, url }) => {
   return (
-       <>
-         {image ? (
-            <input type="submit" value="Create"></input>
-          ) : (
-            <div>
-              <input
-                type="submit"
-                value={creating ? "Creating Art..." : "Create"}
-              ></input>
-              {/* <input onSubmit={clearHandler}
-            type="submit"
-            value={"Clear"}
-          ></input> */}
-            </div>
-          )}
-          </>
-  )
-}
+    <div
+    style={{
+      display: "flex",
+      width: "100%",
+      justifyContent: "space-between",
+      margin: "15px 0px",
+    }}
+  >
+    <input
+      type="submit"
+      value={isCreating ? "Creating Art..." : "Create"}
+      className={ isCreating ? "waitingButton" : ""}
+    ></input>
+    <input
+    onClick={mintHandler}
+    type="submit"
+    value={isMinting ? "Minting Art..." : "Mint"}
+    className={
+      isMinting
+        ? "waitingButton"
+        : !image || url
+        ? "disabledButton"
+        : ""
+    }
+  ></input>
+  </div>
+  );
+};
 
-export default CreateButton
+export default CreateButton;

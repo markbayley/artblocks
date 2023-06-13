@@ -1,5 +1,235 @@
 import React from "react";
 
+
+const subjects = [
+  {
+    name: "Subject",
+  },
+  {
+    name: "Landscape",
+  },
+  {
+    name: "Portrait",
+  },
+  {
+    name: "Seascape",
+  },
+  {
+    name: "Figure",
+  },
+  {
+    name: "Fruit Bowl",
+  },
+];
+
+const colours = [
+  {
+    name: "Colour",
+  },
+  {
+    name: "Turquoise",
+  },
+  {
+    name: "Citrine",
+  },
+  {
+    name: "Ochre",
+  },
+  {
+    name: "Apricot",
+  },
+  {
+    name: "Beige",
+  },
+  {
+    name: "Raw Sienna",
+  },
+  {
+    name: "Fushcia",
+  },
+  {
+    name: "Coral",
+  },
+  {
+    name: "Sepia",
+  },
+  {
+    name: "Amber",
+  },
+  {
+    name: "Scarlet",
+  },
+  {
+    name: "Crimson",
+  },
+  {
+    name: "Vermilion",
+  },
+  {
+    name: "Cadmium",
+  },
+  {
+    name: "Mauve",
+  },
+  {
+    name: "Gold",
+  },
+  {
+    name: "Lime",
+  },
+  {
+    name: "Olive",
+  },
+  {
+    name: "Viridian",
+  },
+  {
+    name: "Cobolt",
+  },
+  {
+    name: "Teal",
+  },
+  {
+    name: "Cerulean",
+  },
+  {
+    name: "Indigo",
+  },
+];
+
+const artists = [
+  {
+    name: "Artist",
+  },
+  {
+    name: "Picasso",
+  },
+  {
+    name: "Dali",
+  },
+  {
+    name: "Van Gogh",
+  },
+  {
+    name: "Rembrandt",
+  },
+  {
+    name: "Cézanne",
+  },
+  {
+    name: "Klimt",
+  },
+  {
+    name: "Matisse",
+  },
+  {
+    name: "Pollock",
+  },
+  {
+    name: "Rothko",
+  },
+];
+
+const styles = [
+  {
+    name: "Style",
+  },
+  {
+    name: "Abstract",
+  },
+  {
+    name: "Expressionism",
+  },
+  {
+    name: "Pop Art",
+  },
+  {
+    name: "Surrealism",
+  },
+  {
+    name: "Realism",
+  },
+  {
+    name: "Minimalism",
+  },
+  {
+    name: "Impressionism",
+  },
+  {
+    name: "Cubism",
+  },
+  {
+    name: "Modernism",
+  },
+];
+
+const mediums = [
+  {
+    name: "Medium",
+  },
+  {
+    name: "Watercolor",
+  },
+  {
+    name: "Oil",
+  },
+  {
+    name: "Charcoal",
+  },
+  {
+    name: "Ink",
+  },
+  {
+    name: "Gouche",
+  },
+  {
+    name: "Acrylic",
+  },
+  {
+    name: "Pencil",
+  },
+  {
+    name: "Pastels",
+  },
+];
+
+const patterns = [
+  {
+    name: "Pattern",
+  },
+  {
+    name: "Stripes",
+  },
+  {
+    name: "Checkered",
+  },
+  {
+    name: "Dots",
+  },
+  {
+    name: "Zig Zags",
+  },
+  {
+    name: "Curves",
+  },
+  {
+    name: "Speckled",
+  },
+  {
+    name: "Swirls",
+  },
+  {
+    name: "Spiked",
+  },
+  {
+    name: "Soft",
+  },
+  {
+    name: "Angular",
+  },
+];
+
+
 const InputFields = ({
   setTitle,
   setDescription,
@@ -9,16 +239,10 @@ const InputFields = ({
   setColour,
   setArtist,
   setPattern,
-  subjects,
-  styles,
-  mediums,
-  patterns,
-  artists,
-  colours,
 }) => {
   return (
-    <>
-      <div className="tabs">
+    <div >
+      <div className="select check"  >
         <input
           required
           type="text"
@@ -38,15 +262,24 @@ const InputFields = ({
       </div>
 
       <div className="check">
-        <select onChange={(e) => setSubject(e.target.value)}>
+        {/* <select onChange={(e) => setSubject(e.target.value)}>
           {subjects.map((subject, index) => (
             <option value={subject.name} key={index}>
               {subject.name}
             </option>
           ))}
+        </select> */}
+           <select style={{ width: "" }}onChange={(e) => setStyle(e.target.value)}>
+          {styles.map((style, index) => (
+            <option value={style.name} key={index}>
+              {style.name}
+            </option>
+          ))}
         </select>
+   
 
-        <select onChange={(e) => setColour(e.target.value)}>
+      
+        <select style={{ width: "" }} onChange={(e) => setColour(e.target.value)}>
           {colours.map((colour, index) => (
             <option value={colour.name} key={index}>
               {colour.name}
@@ -63,16 +296,6 @@ const InputFields = ({
             </option>
           ))}
         </select>
-        <select onChange={(e) => setStyle(e.target.value)}>
-          {styles.map((style, index) => (
-            <option value={style.name} key={index}>
-              {style.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="check">
         <select onChange={(e) => setArtist(e.target.value)}>
           {artists.map((artist, index) => (
             <option value={artist.name} key={index}>
@@ -80,15 +303,11 @@ const InputFields = ({
             </option>
           ))}
         </select>
-        <select onChange={(e) => setPattern(e.target.value)}>
-          {patterns.map((pattern, index) => (
-            <option value={pattern.name} key={index}>
-              {pattern.name}
-            </option>
-          ))}
-        </select>
+     
       </div>
-    </>
+
+ 
+    </div>
   );
 };
 
