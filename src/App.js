@@ -29,6 +29,7 @@ function App() {
   const [url, setURL] = useState(null);
   const [metaData, setMetaData] = useState(null);
 
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [style, setStyle] = useState("");
@@ -97,7 +98,7 @@ function App() {
     await mintImage(url);
 
     setIsMinting(false);
-    setMessage("");
+  
     setKeyword([]);
     setActive([]);
   };
@@ -138,6 +139,8 @@ function App() {
           " " +
           pattern + 
           " " +
+          mintingIndex +
+          " " +
           account,
 
         options: { wait_for_model: true },
@@ -163,7 +166,7 @@ function App() {
   const uploadImage = async (imageData, tokenURI) => {
     setIsMinting(true);
     console.log("isMinting", isMinting);
-    setMessage("Saving Image Remotely...");
+    setMessage("Requesting remote storage..");
     // Create instance to NFT.Storage
 
     const nftstorage = new NFTStorage({
@@ -184,10 +187,10 @@ function App() {
     const signer = await provider.getSigner();
     const transaction = await nft
       .connect(signer)
-      .mint(url, { value: ethers.utils.parseUnits("1", "ether") });
+      .mint(url, { value: ethers.utils.parseUnits("0.01", "ether") });
     await transaction.wait();
    console.log("transactionI:", transaction);
-    // console.log("signer:", signer);
+    console.log("signer:", signer);
 
     const hash = transaction.hash;
     console.log("hashI:", hash);
@@ -197,14 +200,11 @@ function App() {
     console.log("transactionHashI:", transactionHash);
 
 
-
-
-
     const date = `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`;
     console.log("date", date);
 
     // Send request to store image
-    setMessage("Storing Image Details...");
+    setMessage("Minted! Storing Data...");
     const { ipnft } = await nftstorage.store({
       image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
       blob: blob,
@@ -231,12 +231,13 @@ function App() {
     console.log("nft.address", nft.address);
 
     // Save the URL
-    setMessage("Saving the URL");
+    setMessage("Success! Minted NFT");
 
     // await createImage(url); // Pass the URL to createImage
     setURL(url);
     const metaData = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
     setMetaData(metaData);
+
 
     const newItem = [
       {
@@ -273,7 +274,7 @@ function App() {
   // Mint Function
   const mintImage = async (tokenURI) => {
     console.log("tokenURI:", tokenURI);
-    setMessage("Success! Minted NFT");
+    // setMessage("");
 
     // const signer = await provider.getSigner();
     // const transaction = await nft
@@ -348,6 +349,8 @@ function App() {
           title={title}
           metaData={metaData}
           transactionHash={transactionHash}
+      
+          
         />
       </div>
 
@@ -360,6 +363,8 @@ function App() {
           mintingIndex={mintingIndex}
           account={account}
           isMinting={isMinting}
+          transactionHash={transactionHash}
+      
         
         />
       ) : (

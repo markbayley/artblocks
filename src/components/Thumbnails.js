@@ -5,19 +5,15 @@ import Modal from "react-bootstrap/Modal";
 const Thumbnails = ({
   thumbs,
   isCreating,
-  image,
   mintingIndex,
-  url,
   account,
-  storedThumbs,
   isMinting,
-  transactionHash,
 }) => {
   const [lgShow, setLgShow] = useState(false);
   const [modalData, setModalData] = useState([]);
 
   console.log("thumbs", thumbs);
-
+  
   return (
     <>
       <div className="heading">Minted Artblocks</div>
@@ -46,9 +42,9 @@ const Thumbnails = ({
                       <div style={{ textTransform: "capitalize" }}>
                         &nbsp;{item.title}
                         <em>"{item.description}"</em>
-                        <a target="_blank" href={item.url}>
+                        {/* <a target="_blank" href={item.url}>
                           &nbsp;&nbsp;&nbsp;URL
-                        </a>
+                        </a> */}
                       </div>
                     </div>
                   </div>
@@ -67,9 +63,9 @@ const Thumbnails = ({
                       <>
                         &nbsp;{item.title}
                         <em>"{item.description}"</em>
-                        <a target="_blank" href={item.url}>
+                        {/* <a target="_blank" href={item.url}>
                           &nbsp;&nbsp;&nbsp;URL
-                        </a>
+                        </a> */}
                       </>
                     </div>
                   </div>
@@ -87,7 +83,11 @@ const Thumbnails = ({
       >
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-lg" className="title">
-            {modalData.title},&nbsp;<em>"{modalData.description}"</em>
+          <div style={{display: "flex", justifyContent: "space-between" }}>
+         <div>
+         {modalData.title},&nbsp;<em>"{modalData.description}"</em>,
+            </div>
+            <div>
             &nbsp;&nbsp;{" "}
             <a target="_blank" href={modalData.metaData}>
               Data
@@ -96,8 +96,13 @@ const Thumbnails = ({
             <a target="_blank" href={modalData.url}>
               URL
             </a>
-            &nbsp;&nbsp;
-            Hash:&nbsp;{ modalData.hash && (modalData.hash).slice(0, 6) + "..." + modalData.hash.slice(62, 66)}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a target="_blank" href={`https://etherscan.io/tx/${modalData.hash}`}>
+            { modalData.hash && (modalData.hash).slice(0, 4) + "..." + (modalData.hash).slice(62, 66)}
+            </a>
+            </div>
+            </div>
+
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

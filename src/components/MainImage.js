@@ -20,6 +20,9 @@ const MainImage = ({
 
   console.log("transactionHashE:", transactionHash);
 
+
+  const hashLink = `https://etherscan.io/tx/${transactionHash}`
+
   const renderImage = () => {
     if (!isCreating && !isMinting && image) {
       return <img src={image} alt="AI generated image" />;
@@ -73,8 +76,12 @@ const MainImage = ({
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-lg">
-            {title}&nbsp;<em>"{description}"</em> - {medium},
+          <Modal.Title id="example-modal-sizes-title-lg" >
+            <div style={{display: "flex", justifyContent: "space-between" }}>
+         <div>
+            {title}&nbsp;<em>"{description}"</em>,
+            </div>
+            <div>
             &nbsp;&nbsp;{" "}
             <a target="_blank" href={metaData}>
               Data
@@ -83,8 +90,12 @@ const MainImage = ({
             <a target="_blank" href={url}>
               URL
             </a>
-            &nbsp;&nbsp;
-            Hash:&nbsp;{ transactionHash && (transactionHash).slice(0, 6) + "..." + transactionHash.slice(62, 66)}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a target="_blank" href={hashLink}>
+            { transactionHash && (transactionHash).slice(0, 4) + "..." + transactionHash.slice(62, 66)}
+            </a>
+            </div>
+            </div>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -109,17 +120,22 @@ const MainImage = ({
           ) : (
             <>
               {title + ", " + "'" + description + "'"}
+         
               { metaData &&
-                <>
+                <div>
+                  <a target="_blank" href={hashLink}>
+                  &nbsp;&nbsp;&nbsp;Hash
+                  </a>
+                 
                   <a target="_blank" href={metaData}>
                     &nbsp;&nbsp;&nbsp;Data
                   </a>
                   <a target="_blank" href={url}>
                     &nbsp;&nbsp;&nbsp;URL
                   </a>
-                  &nbsp;&nbsp;
-            Hash:&nbsp;{ transactionHash && (transactionHash).slice(0, 6) + "..." + transactionHash.slice(62, 66)}
-                </>
+                
+              
+                </div>
             }
             </>
           )}

@@ -19,6 +19,9 @@ const subjects = [
   {
     name: "Fruit Bowl",
   },
+  {
+    name: "Collector Card",
+  },
 ];
 
 const words = [

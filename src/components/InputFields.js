@@ -1,27 +1,6 @@
 import React from "react";
 
 
-const subjects = [
-  {
-    name: "Subject",
-  },
-  {
-    name: "Landscape",
-  },
-  {
-    name: "Portrait",
-  },
-  {
-    name: "Seascape",
-  },
-  {
-    name: "Figure",
-  },
-  {
-    name: "Fruit Bowl",
-  },
-];
-
 const colours = [
   {
     name: "Colour",
@@ -102,31 +81,40 @@ const artists = [
     name: "Artist",
   },
   {
-    name: "Picasso",
+    name: "Banksy",
   },
   {
-    name: "Dali",
+    name: "Pablo Picasso",
   },
   {
-    name: "Van Gogh",
+    name: "Claude Monet",
+  },
+  {
+    name: "Salvadore Dali",
+  },
+  {
+    name: "Vincent Van Gogh",
   },
   {
     name: "Rembrandt",
   },
   {
-    name: "Cézanne",
+    name: "Paul Cézanne",
   },
   {
-    name: "Klimt",
+    name: "Gustav Klimt",
   },
   {
-    name: "Matisse",
+    name: "Henry Matisse",
   },
   {
-    name: "Pollock",
+    name: "Jackson Pollock",
   },
   {
-    name: "Rothko",
+    name: "Mark Rothko",
+  },
+  {
+    name: "Brett Whiteley",
   },
 ];
 
@@ -138,10 +126,25 @@ const styles = [
     name: "Abstract",
   },
   {
-    name: "Expressionism",
+    name: "Fantasy Art",
+  },
+  {
+    name: "Anime",
+  },
+  {
+    name: "Comic Book",
+  },
+  {
+    name: "Childrens Book",
   },
   {
     name: "Pop Art",
+  },
+  {
+    name: "Street Art",
+  },
+  {
+    name: "Expressionism",
   },
   {
     name: "Surrealism",
@@ -161,11 +164,21 @@ const styles = [
   {
     name: "Modernism",
   },
+ 
 ];
 
 const mediums = [
   {
     name: "Medium",
+  },
+  {
+    name: "Print Art",
+  },
+  {
+    name: "Sketch Art",
+  },
+  {
+    name: "Graphic Novel",
   },
   {
     name: "Watercolor",
@@ -186,46 +199,10 @@ const mediums = [
     name: "Acrylic",
   },
   {
-    name: "Pencil",
+    name: "Pencil Drawing",
   },
   {
     name: "Pastels",
-  },
-];
-
-const patterns = [
-  {
-    name: "Pattern",
-  },
-  {
-    name: "Stripes",
-  },
-  {
-    name: "Checkered",
-  },
-  {
-    name: "Dots",
-  },
-  {
-    name: "Zig Zags",
-  },
-  {
-    name: "Curves",
-  },
-  {
-    name: "Speckled",
-  },
-  {
-    name: "Swirls",
-  },
-  {
-    name: "Spiked",
-  },
-  {
-    name: "Soft",
-  },
-  {
-    name: "Angular",
   },
 ];
 
