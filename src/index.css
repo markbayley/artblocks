@@ -119,7 +119,7 @@ form {
    justify-content: center;
   align-items: center; 
   min-height: 420px;
-  margin: 10px !important;
+  /* margin: 10px !important; */
 }
 
 form input[type="text"] {
@@ -209,6 +209,7 @@ select + select {
 .title {
   margin: 10px 0px 0px 0px;
   color: grey;
+  text-transform: capitalize;
 }
 
 .heading {
@@ -303,9 +304,13 @@ button:hover {
   width: 350px;
   height: 350px;
   margin: 15px 25px;
-  border: 3px solid var(--clr-blue);
+  border: 3px solid var(--clr-orange);
   border-radius: 4px;
   overflow: hidden;
+}
+
+image img:hover {
+  border: 3px solid var(--clr-blue--2);
 }
 
 .image img {
@@ -382,10 +387,28 @@ p {
 @media screen and (max-width: 768px) {
   .form {
     flex-direction: column;
-
   }
+
+  form input[type="text"] {
+    max-width: 48%;
+  }
+
+ button {
+  width: 20%;
+ }
+
+button:last-child {
+  display: none;
+}
+  
+.image {
+  width: 300px;
+  height: 300px;
+}
+  
   .thumbnails {
     grid-template-columns: repeat(1, 1fr);
+    margin: 0;
    
   }
 
