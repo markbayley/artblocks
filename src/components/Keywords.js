@@ -20,7 +20,7 @@ const subjects = [
     name: "Fruit Bowl",
   },
   {
-    name: "Collector Card",
+    name: "Collection",
   },
 ];
 

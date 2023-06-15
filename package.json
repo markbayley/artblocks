@@ -1,5 +1,6 @@
 {
   "name": "ai_nft_generator",
+  "homepage": "https://markbayley.github.io/artblocks",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

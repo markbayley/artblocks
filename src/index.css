@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Play:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Play:wght@400;700&display=swap");
 
 * {
   margin: 0;
@@ -7,9 +7,9 @@
 }
 
 :root {
-  --clr-white: #FFFFFF;
+  --clr-white: #ffffff;
   --clr-black: #202020;
-  --clr-blue: #6C63FF;
+  --clr-blue: #6c63ff;
   --clr-blue-2: #4c46b6;
   --clr-orange: #f8b817;
 }
@@ -19,11 +19,7 @@ body {
   font-family: "Play";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
-
 }
-
-
 
 a {
   /* color: white; */
@@ -98,17 +94,15 @@ nav {
   justify-content: end;
   margin-right: 25px;
   font-size: 0.8em;
-  color:#f81717;
+  color: #f81717;
 }
 
 /* ------------------------------------------------------ */
 /* -- FORM -- */
 
-
-
 form {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   margin: 0 25px;
@@ -116,8 +110,8 @@ form {
 
 .form {
   display: flex;
-   justify-content: center;
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   min-height: 420px;
   /* margin: 10px !important; */
 }
@@ -129,7 +123,6 @@ form input[type="text"] {
   padding: 10px 0px 0px 15px;
   border: none;
   border-bottom: 1px solid var(--clr-blue);
-
 }
 
 input + input {
@@ -137,7 +130,7 @@ input + input {
 }
 
 form input[type="submit"] {
-  background-color:  var(--clr-orange);
+  background-color: var(--clr-orange);
   color: var(--clr-white);
 
   width: 150px;
@@ -164,7 +157,7 @@ form input[type="submit"]:disabled {
   background-color: grey;
 }
 
-form input[type="checkbox"]  { 
+form input[type="checkbox"] {
   width: 25px;
   height: 25px;
 }
@@ -181,7 +174,6 @@ select {
 select + select {
   margin-left: 10px;
 }
-
 
 .check {
   display: flex;
@@ -201,7 +193,7 @@ select + select {
 
 .tabs {
   /* padding-top: 10px; */
- display: flex;
+  display: flex;
   justify-content: space-between;
   width: 100%;
 }
@@ -210,6 +202,8 @@ select + select {
   margin: 10px 0px 0px 0px;
   color: grey;
   text-transform: capitalize;
+  display: flex;
+  justify-content: center;
 }
 
 .heading {
@@ -230,7 +224,6 @@ select + select {
 .disabledButton {
   cursor: not-allowed !important;
   background-color: lightgray !important;
-
 }
 
 button {
@@ -278,7 +271,7 @@ button:hover {
 .icon {
   width: 200px;
   background-color: white;
-  border: 1px solid white; 
+  border: 1px solid white;
   padding: 0px;
   margin: 0px;
 }
@@ -287,7 +280,7 @@ button:hover {
   width: 200px;
   color: black;
   background-color: white;
-  border: 1px solid white; 
+  border: 1px solid white;
   padding: 0px;
   margin: 0px;
 }
@@ -300,7 +293,7 @@ button:hover {
   justify-content: center;
   align-items: center; */
 
-  max-width: 90%;
+  /* max-width: 90%; */
   width: 350px;
   height: 350px;
   margin: 15px 25px;
@@ -322,7 +315,7 @@ image img:hover {
 .thumbnails {
   /* border-top: 1px solid grey; */
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   align-items: center;
   border-top: 1px solid grey;
   margin: 0px 25px 0px 35px;
@@ -335,7 +328,6 @@ image img:hover {
   text-align: center;
 }
 
-
 .thumbnail img {
   width: 200px;
   height: 200px;
@@ -346,14 +338,18 @@ image img:hover {
 
 .loading {
   opacity: 1;
-  animation: fade 2s  infinite;
+  animation: fade 2s infinite;
 }
 
 @keyframes fade {
-  0%,100% { opacity: 0.2 }
-  50% { opacity: 0.5 }
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
-
 
 .image__placeholder {
   display: flex;
@@ -365,7 +361,7 @@ image img:hover {
   margin: 0 10px;
 }
 
-.text__placeholder{
+.text__placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -376,8 +372,8 @@ image img:hover {
 /* ------------------------------------------------------ */
 /* -- TEXT -- */
 p {
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
   /* align-items: flex-start;
   margin-bottom: 0;
   margin: 0px;
@@ -393,30 +389,39 @@ p {
     max-width: 48%;
   }
 
- button {
-  width: 20%;
- }
+  button {
+    width: 20%;
+  }
 
-button:last-child {
-  display: none;
-}
-  
-.image {
-  width: 300px;
-  height: 300px;
-}
-  
+  button:last-child {
+    display: none;
+  }
+
+  .image {
+    /* width: 300px;
+    height: 300px; */
+    margin: 15px;
+    width: 330px;
+  }
+
   .thumbnails {
     grid-template-columns: repeat(1, 1fr);
     margin: 0;
    
+
+    align-items: center;
+  }
+
+  .thumbnails {
+    /* width: 300px;
+    height: 300px; */
+    
   }
 
   .thumbnail img {
-    width: 300px;
-    height: 300px;
+
     border-radius: 6px;
-    margin: 10px 10px 0px 10px;
+    /* margin: 10px 10px 0px 10px; */
+
   }
 }
-
