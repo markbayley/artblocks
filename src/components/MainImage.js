@@ -26,10 +26,8 @@ const MainImage = ({
         className="thumbnails"
         onClick={() => {
           setLgShow(true);
-        }}
-
-        // style={{width: "350px"}}
-      
+        }}  
+        style={{width: "300px"}}
       >
         {!isCreating && !isMinting && image ? (
           <div className="thumbnail"  >
@@ -55,23 +53,9 @@ const MainImage = ({
                 animation="border"
                 style={{ width: "5rem", height: "5rem", color: "#f8b817" }}
               />
-              {/* <span
-                style={{
-                  background: "#4c46b6",
-                  color: "#fff",
-                  padding: "10px",
-                  borderRadius: "5px",
-                  boxShadow: "1px 1px gray",
-                  marginTop: "15px",
-          
-                }}
-              >
-                {message}
-              </span> */}
             </div>
             <div className="title">
             &nbsp;{message}
-            {/* <em>"{description}"</em> */}
             </div>
           </div>
         ) : (
@@ -82,36 +66,6 @@ const MainImage = ({
             </div>
           </div>
         )}
-
-        {/* 
-<div className="title">
-       {isCreating ? (
-          "Your Artblock is being created..."
-         ) : isMinting ? (
-           "Your Artblock is being minted..."
-       ) : !image ? (
-        "Let's Create Something!"
-        ) : (
-        <p className="title"> 
-           {title + ", " + "'" + description + "'"}
-
-           {metaData && (
-           <>
-                <a target="_blank" href={hashLink}>
-                &nbsp;&nbsp;&nbsp;Hash
-            </a>
-
-                <a target="_blank" href={metaData}>
-                &nbsp;&nbsp;&nbsp;Data
-                </a>
-               <a target="_blank" href={url}>
-                   &nbsp;&nbsp;&nbsp;URL
-                </a>
-              </>
-            )}
-         </p>
-      )}
-    </div> */}
       </div>
 
       <Modal

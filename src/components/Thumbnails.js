@@ -10,7 +10,7 @@ const Thumbnails = ({
   account,
   isMinting,
   message,
-  isLoading
+  isLoading,
 }) => {
   const [lgShow, setLgShow] = useState(false);
   const [modalData, setModalData] = useState([]);
@@ -26,60 +26,68 @@ const Thumbnails = ({
         {thumbs.length === 0 ? (
           <div className="text__placeholder">No Artblocks minted</div>
         ) : (
-          thumbs.map((item, index) => (
-            <div
-              className="thumbnail"
-              onClick={() => {
-                setModalData(item);
-                setLgShow(true);
-              }}
-              key={index}
-            >
-              {item.account === account &&
-              ((!isCreating && !isMinting) ||
-                isCreating ||
-                (isMinting && index !== mintingIndex)) ? (
-                <div>
-                  <img src={item.url ? item.url : placeholder} alt="AI thumbnail" />
-                  <div className="overlay">
-                    <span className="points">
-                      {" "}
-                      <a
-                        target="_blank"
-                        href={`https://sepolia.etherscan.io/tx/${item.hash}`}
-                      >
-                        {item.hash.slice(64, 66).toUpperCase()}
-                      </a>
-                    </span>{" "}
-                  </div>
-                  <div className="title">
-            &nbsp;{item.title}
-            <em>"{item.description}"</em>
-            </div>
-                </div>
-              ) : (
-             ( isLoading &&
+          thumbs
+            .map((item, index) => (
+              <div
+                className="thumbnail"
+                onClick={() => {
+                  setModalData(item);
+                  setLgShow(true);
+                }}
+                key={index}
+              >
+                {item.account === account &&
+                ((!isCreating && !isMinting) ||
+                  isCreating ||
+                  (isMinting && index !== mintingIndex)) ? (
                   <div>
-                  <img src={item.url ? item.url : placeholder} alt="AI thumbnail" className="loading"/>
-                  <div class="overlay loading">
-                    <span className="points">
-                      {" "}
-                      <a
-                        target="_blank"
-                        href={`https://sepolia.etherscan.io/tx/${item.hash}`}
-                      >
-                        {item.hash.slice(64, 66).toUpperCase()}
-                      </a>
-                    </span>{" "}
+                    <img
+                      src={item.url ? item.url : placeholder}
+                      alt="AI thumbnail"
+                    />
+                    <div className="overlay">
+                      <span className="points">
+                        {" "}
+                        <a
+                          target="_blank"
+                          href={`https://sepolia.etherscan.io/tx/${item.hash}`}
+                        >
+                          {item.hash.slice(64, 66).toUpperCase()}
+                        </a>
+                      </span>{" "}
+                    </div>
+                    <div className="title">
+                      &nbsp;{item.title}
+                      <em>"{item.description}"</em>
+                    </div>
                   </div>
-                  &nbsp;{item.title}
-                  <em>"{item.description}"</em>
-                </div>
-                )
-              )}
-            </div>
-          ))
-          .reverse()
+                ) : (
+                  isLoading && item.account === account && (
+                    <div>
+                      <img
+                        src={item.url ? item.url : placeholder}
+                        alt="AI thumbnail"
+                        className="loading"
+                      />
+                      <div class="overlay loading">
+                        <span className="points">
+                          {" "}
+                          <a
+                            target="_blank"
+                            href={`https://sepolia.etherscan.io/tx/${item.hash}`}
+                          >
+                            {item.hash.slice(64, 66).toUpperCase()}
+                          </a>
+                        </span>{" "}
+                      </div>
+                      &nbsp;{item.title}
+                      <em>"{item.description}"</em>
+                    </div>
+                  )
+                )}
+              </div>
+            ))
+            .reverse()
         )}
       </div>
 
@@ -127,5 +135,3 @@ const Thumbnails = ({
 };
 
 export default Thumbnails;
-
-

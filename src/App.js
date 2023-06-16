@@ -1,12 +1,9 @@
-
-
 import { useState, useEffect } from "react";
-import Web3 from 'web3'
+import Web3 from "web3";
 import { NFTStorage, File } from "nft.storage";
 import { Buffer } from "buffer";
 import { ethers } from "ethers";
 import axios from "axios";
-
 
 // Components
 import Navigation from "./components/Navigation";
@@ -22,45 +19,35 @@ import Keywords from "./components/Keywords";
 import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
 
-
-
 function App() {
-
-
-  
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [nft, setNFT] = useState(null);
-
   const [name, setName] = useState("Artblocks AI NFT Contract");
-
   const [image, setImage] = useState(null);
   const [url, setURL] = useState(null);
   const [metaData, setMetaData] = useState(null);
   const [powerPoints, setPowerPoints] = useState(null);
 
-  const [title, setTitle] = useState("laughing panda");
-  const [description, setDescription] = useState("bear");
-  const [style, setStyle] = useState("Anime");
-  const [artist, setArtist] = useState("Banksy");
-  const [medium, setMedium] = useState("Comic Book");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [style, setStyle] = useState("");
+  const [artist, setArtist] = useState("");
+  const [medium, setMedium] = useState("");
   const [colour, setColour] = useState("");
   const [pattern, setPattern] = useState("");
   const [subject, setSubject] = useState("");
   const [keyword, setKeyword] = useState([]);
 
   const [formData, setFormData] = useState([]);
-
   const [message, setMessage] = useState("");
 
   const [isCreating, setIsCreating] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [mintingIndex, setMintingIndex] = useState(0);
-
   const [active, setActive] = useState([]);
   const [transactionHash, setTransactionHash] = useState();
-
   const [thumbs, setThumbs] = useState([]);
 
   //  localStorage.clear();
@@ -68,7 +55,6 @@ function App() {
     if (thumbs.length > 0) {
       localStorage.setItem("thumbs", JSON.stringify(thumbs));
     }
-
     if (formData.title !== "") {
       localStorage.setItem("formData", JSON.stringify(formData));
     }
@@ -82,15 +68,20 @@ function App() {
     }
 
     const formData = JSON.parse(localStorage.getItem("formData", "style"));
-   if (formData.style !== "") {
-    setFormData({...formData, style: formData.style, title: formData.title, description: formData.description});
-   }
+    if (formData.style !== "") {
+      setFormData({
+        ...formData,
+        style: formData.style,
+        title: formData.title,
+        description: formData.description,
+        artist: formData.artist,
+        medium: formData.medium,
+        colour: formData.colour,
+        pattern: formData.pattern,
+        subject: formData.subject,
+      });
+    }
   }, []);
-
-  
-
-
-
 
   // Load NFT Contract
   const loadBlockchainData = async () => {
@@ -105,15 +96,8 @@ function App() {
       provider
     );
 
-
     setNFT(nft);
-
-   
-
-   
   };
-
-
 
   // Create Image Button
   const submitHandler = async (e) => {
@@ -132,9 +116,7 @@ function App() {
 
     await uploadImage(imageData);
     // await mintImage(url);
-
     // setIsMinting(false);
-
     setKeyword([]);
     setActive([]);
   };
@@ -191,7 +173,6 @@ function App() {
 
     setImage(img);
     setMessage("Image Created...");
-   
 
     setIsCreating(false);
     return data;
@@ -201,7 +182,7 @@ function App() {
   const uploadImage = async (imageData, tokenURI) => {
     setIsMinting(true);
     setMintingIndex(thumbs.length + 1);
-    setMessage("Requesting remote storage..M");
+    setMessage("Requesting remote storage..");
     // Create instance to NFT.Storage
 
     const nftstorage = new NFTStorage({
@@ -212,20 +193,19 @@ function App() {
     const imageHash = await nftstorage.storeBlob(blob);
 
     const url = `https://ipfs.io/ipfs/${imageHash}/`;
-   
-    setMessage("Click 'Confirm' in Metamask to Mint...");
+
+    setMessage("Click 'Confirm' in Metamask...");
 
     const signer = await provider.getSigner();
-    
+
     const transaction = await nft
       .connect(signer)
       .mint(url, { value: ethers.utils.parseUnits("0.01", "ether") });
-      setMessage("Minting " + `${"'" + description + "'"}` + "...");
+    setMessage("Minting " + `${"'" + description + "'"}` + "...");
     await transaction.wait();
 
- 
     // setIsLoading(true);
-    setMessage("Minted! Storing Data...ML+1");
+    setMessage("Minted! Storing Data...");
 
     const hash = transaction.hash;
     setTransactionHash(hash);
@@ -235,9 +215,6 @@ function App() {
     const date = `${new Date().getDate()}/${
       new Date().getMonth() + 1
     }/${new Date().getFullYear()}`;
-
-    
-   
 
     const { ipnft } = await nftstorage.store({
       image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
@@ -263,8 +240,7 @@ function App() {
       ],
       imageURL: url,
     });
-   
-    setMessage("New Thumb...");
+
     setURL(url);
     const metaData = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
     setMetaData(metaData);
@@ -297,27 +273,20 @@ function App() {
     setThumbs([...thumbs, ...newItem]);
     setIsMinting(false);
     setIsLoading(true);
-    setMessage("MLFalse...");
- 
-    // setItems((prevArr) => ([...prevArr, newItem]));
 
+    // setItems((prevArr) => ([...prevArr, newItem]));
     return url;
   };
-
 
   console.log("localStorage", localStorage);
   console.log("formData", formData);
   console.log("points", powerPoints);
   console.log("thumbs", thumbs);
+  console.log("active", active);
+
   useEffect(() => {
     loadBlockchainData();
   }, []);
-
-  
-
-      
-  
-
 
   return (
     <div>
@@ -345,18 +314,28 @@ function App() {
             setFormData={setFormData}
             formData={formData}
             style={style}
+            pattern={pattern}
+            colour={colour}
             description={description}
             title={title}
+            subject={subject}
+            medium={medium}
+            active={active}
+            setActive={setActive}
+            setKeyword={setKeyword}
+            keyword={keyword}
           />
 
-          <Keywords
+          {/* <Keywords
             subject={subject}
             active={active}
             setPattern={setPattern}
             setSubject={setSubject}
             setActive={setActive}
             setKeyword={setKeyword}
-          />
+            formData={formData}
+            setFormData={setFormData}
+          /> */}
 
           <CreateButton
             isCreating={isCreating}

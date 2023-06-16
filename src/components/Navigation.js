@@ -1,25 +1,23 @@
-import { ethers } from 'ethers';
-import { useEffect } from 'react';
+import { ethers } from "ethers";
+import { useEffect } from "react";
 
 import Dropdown from "react-bootstrap/Dropdown";
 
 const Navigation = ({ account, setAccount, provider }) => {
+  const connectHandler = async () => {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    const account = ethers.utils.getAddress(accounts[0]);
+    setAccount(account);
+  };
 
-    const connectHandler = async () => {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const account = ethers.utils.getAddress(accounts[0])
-        setAccount(account);
-    }
+  useEffect(() => {
+    connectHandler();
+  }, [account]);
 
-    useEffect(() => {
-        connectHandler();
-      }, [account]);
-
-    
-
-
-    return (
-        <nav>
+  return (
+    <nav>
       <div className="nav__brand">
         <h1>Artblocks</h1>
       </div>
@@ -76,8 +74,7 @@ const Navigation = ({ account, setAccount, provider }) => {
         </div>
       )}
     </nav>
-      
-    );
-}
+  );
+};
 
 export default Navigation;
