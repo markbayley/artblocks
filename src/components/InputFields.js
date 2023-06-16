@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 
 const colours = [
@@ -76,6 +76,8 @@ const colours = [
   },
 ];
 
+
+
 const artists = [
   {
     name: "Artist",
@@ -84,7 +86,22 @@ const artists = [
     name: "Banksy",
   },
   {
+    name: "Hasui Kawase",
+  },
+  {
+    name: "Makoto Shinkai",
+  },
+  {
+    name: "Greg Rutkowski",
+  },
+  {
+    name: "Alphonse Mucha",
+  },
+  {
     name: "Pablo Picasso",
+  },
+  {
+    name: "M.C. Escher",
   },
   {
     name: "Claude Monet",
@@ -123,6 +140,15 @@ const styles = [
     name: "Style",
   },
   {
+    name: "Hyper Realistic",
+  },
+  {
+    name: "Cyberpunk",
+  },
+  {
+    name: "Artstation",
+  },
+  {
     name: "Abstract",
   },
   {
@@ -132,16 +158,37 @@ const styles = [
     name: "Anime",
   },
   {
+    name: "Digital Illustration",
+  },
+  {
+    name: "Highly Detaailed",
+  },
+  {
     name: "Comic Book",
   },
   {
+    name: "Lithograph",
+  },
+  {
     name: "Childrens Book",
+  },
+  {
+    name: "Steampunk",
   },
   {
     name: "Pop Art",
   },
   {
     name: "Street Art",
+  },
+  {
+    name: "Print Art",
+  },
+  {
+    name: "Sketch Art",
+  },
+  {
+    name: "Renaissance",
   },
   {
     name: "Expressionism",
@@ -172,13 +219,10 @@ const mediums = [
     name: "Medium",
   },
   {
-    name: "Print Art",
-  },
-  {
-    name: "Sketch Art",
-  },
-  {
     name: "Graphic Novel",
+  },
+  {
+    name: "Cinematic",
   },
   {
     name: "Watercolor",
@@ -207,6 +251,8 @@ const mediums = [
 ];
 
 
+
+
 const InputFields = ({
   setTitle,
   setDescription,
@@ -216,24 +262,38 @@ const InputFields = ({
   setColour,
   setArtist,
   setPattern,
+  setFormData,
+  formData,
+  style,
+  description,
+  title
 }) => {
+
+  // useEffect(() => {
+
+  // }, [formData]);
+
   return (
     <div >
-      <div className="select check"  >
+      <div className="select "  >
         <input
           required
           type="text"
-          placeholder="NFT name..."
+          placeholder="NFT Title..."
           onChange={(e) => {
             setTitle(e.target.value);
+            setFormData({...formData, title: e.target.value })
+          
           }}
         ></input>
         <input
           required
           type="text"
-          placeholder="NFT description..."
+          placeholder="NFT Description..."
           onChange={(e) => {
             setDescription(e.target.value);
+            setFormData({...formData, description: e.target.value })
+           
           }}
         ></input>
       </div>
@@ -246,7 +306,11 @@ const InputFields = ({
             </option>
           ))}
         </select> */}
-           <select style={{ width: "" }}onChange={(e) => setStyle(e.target.value)}>
+           <select style={{ width: "" }}
+           onChange={(e) => {
+            setStyle(e.target.value)
+            setFormData({...formData, style: e.target.value })
+           }} >
           {styles.map((style, index) => (
             <option value={style.name} key={index}>
               {style.name}

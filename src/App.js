@@ -1,8 +1,12 @@
+
+
 import { useState, useEffect } from "react";
+import Web3 from 'web3'
 import { NFTStorage, File } from "nft.storage";
 import { Buffer } from "buffer";
 import { ethers } from "ethers";
 import axios from "axios";
+
 
 // Components
 import Navigation from "./components/Navigation";
@@ -18,7 +22,12 @@ import Keywords from "./components/Keywords";
 import MainImage from "./components/MainImage";
 import InputFields from "./components/InputFields";
 
+
+
 function App() {
+
+
+  
   const [provider, setProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [nft, setNFT] = useState(null);
@@ -28,22 +37,25 @@ function App() {
   const [image, setImage] = useState(null);
   const [url, setURL] = useState(null);
   const [metaData, setMetaData] = useState(null);
+  const [powerPoints, setPowerPoints] = useState(null);
 
-
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [style, setStyle] = useState("");
-  const [artist, setArtist] = useState("");
-  const [medium, setMedium] = useState("");
+  const [title, setTitle] = useState("laughing panda");
+  const [description, setDescription] = useState("bear");
+  const [style, setStyle] = useState("Anime");
+  const [artist, setArtist] = useState("Banksy");
+  const [medium, setMedium] = useState("Comic Book");
   const [colour, setColour] = useState("");
   const [pattern, setPattern] = useState("");
   const [subject, setSubject] = useState("");
   const [keyword, setKeyword] = useState([]);
 
+  const [formData, setFormData] = useState([]);
+
   const [message, setMessage] = useState("");
 
   const [isCreating, setIsCreating] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [mintingIndex, setMintingIndex] = useState(0);
 
   const [active, setActive] = useState([]);
@@ -56,14 +68,29 @@ function App() {
     if (thumbs.length > 0) {
       localStorage.setItem("thumbs", JSON.stringify(thumbs));
     }
-  }, [thumbs]);
+
+    if (formData.title !== "") {
+      localStorage.setItem("formData", JSON.stringify(formData));
+    }
+  }, [thumbs, formData]);
 
   useEffect(() => {
     const thumbs = JSON.parse(localStorage.getItem("thumbs"));
+
     if (thumbs) {
       setThumbs(thumbs);
     }
+
+    const formData = JSON.parse(localStorage.getItem("formData", "style"));
+   if (formData.style !== "") {
+    setFormData({...formData, style: formData.style, title: formData.title, description: formData.description});
+   }
   }, []);
+
+  
+
+
+
 
   // Load NFT Contract
   const loadBlockchainData = async () => {
@@ -77,8 +104,16 @@ function App() {
       NFT,
       provider
     );
+
+
     setNFT(nft);
+
+   
+
+   
   };
+
+
 
   // Create Image Button
   const submitHandler = async (e) => {
@@ -86,6 +121,7 @@ function App() {
 
     createImage();
 
+    setPowerPoints(null);
     setURL(null);
     setMetaData(null);
   };
@@ -94,11 +130,11 @@ function App() {
   const mintHandler = async (e, imageData) => {
     e.preventDefault();
 
-    const url = await uploadImage(imageData);
-    await mintImage(url);
+    await uploadImage(imageData);
+    // await mintImage(url);
 
-    setIsMinting(false);
-  
+    // setIsMinting(false);
+
     setKeyword([]);
     setActive([]);
   };
@@ -106,7 +142,7 @@ function App() {
   // Create Image Function
   const createImage = async () => {
     setIsCreating(true);
-    setMessage("Generating Image...");
+    setMessage("Generating AI Image...");
     // getURL(nft);
     const URL = `https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2`;
 
@@ -137,12 +173,11 @@ function App() {
           " " +
           colour +
           " " +
-          pattern + 
+          pattern +
           " " +
           mintingIndex +
           " " +
           account,
-
         options: { wait_for_model: true },
       }),
       responseType: "arraybuffer",
@@ -155,8 +190,8 @@ function App() {
     const img = `data:${type};base64,` + base64data;
 
     setImage(img);
-
     setMessage("Image Created...");
+   
 
     setIsCreating(false);
     return data;
@@ -165,8 +200,8 @@ function App() {
   // Upload Function
   const uploadImage = async (imageData, tokenURI) => {
     setIsMinting(true);
-    console.log("isMinting", isMinting);
-    setMessage("Requesting remote storage..");
+    setMintingIndex(thumbs.length + 1);
+    setMessage("Requesting remote storage..M");
     // Create instance to NFT.Storage
 
     const nftstorage = new NFTStorage({
@@ -177,34 +212,33 @@ function App() {
     const imageHash = await nftstorage.storeBlob(blob);
 
     const url = `https://ipfs.io/ipfs/${imageHash}/`;
-
-    
-
-    
-    // console.log("tokenURI:", tokenURI);
+   
     setMessage("Click 'Confirm' in Metamask to Mint...");
 
     const signer = await provider.getSigner();
+    
     const transaction = await nft
       .connect(signer)
       .mint(url, { value: ethers.utils.parseUnits("0.01", "ether") });
+      setMessage("Minting " + `${"'" + description + "'"}` + "...");
     await transaction.wait();
-   console.log("transactionI:", transaction);
-    console.log("signer:", signer);
+
+ 
+    // setIsLoading(true);
+    setMessage("Minted! Storing Data...ML+1");
 
     const hash = transaction.hash;
-    console.log("hashI:", hash);
-   
-    // await uploadImage(hash);
     setTransactionHash(hash);
-    console.log("transactionHashI:", transactionHash);
+    const powerPoints = hash.slice(64, 66);
+    setPowerPoints(powerPoints);
 
+    const date = `${new Date().getDate()}/${
+      new Date().getMonth() + 1
+    }/${new Date().getFullYear()}`;
 
-    const date = `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`;
-    console.log("date", date);
+    
+   
 
-    // Send request to store image
-    setMessage("Minted! Storing Data...");
     const { ipnft } = await nftstorage.store({
       image: new File([imageData], "image.jpeg", { type: "image/jpeg" }),
       blob: blob,
@@ -215,6 +249,7 @@ function App() {
       hash: hash,
       owner: account,
       date: date,
+      powerPoints: powerPoints,
       inputData: [
         title,
         description,
@@ -228,16 +263,11 @@ function App() {
       ],
       imageURL: url,
     });
-    console.log("nft.address", nft.address);
-
-    // Save the URL
-    setMessage("Success! Minted NFT");
-
-    // await createImage(url); // Pass the URL to createImage
+   
+    setMessage("New Thumb...");
     setURL(url);
     const metaData = `https://ipfs.io/ipfs/${ipnft}/metadata.json`;
     setMetaData(metaData);
-
 
     const newItem = [
       {
@@ -254,6 +284,7 @@ function App() {
           subject,
           colour,
           style,
+          powerPoints,
         ],
         url: url,
         hash: hash,
@@ -262,45 +293,39 @@ function App() {
         date: date,
       },
     ];
-
-    setThumbs([...thumbs, ...newItem]);
-
     setMintingIndex(thumbs.length);
+    setThumbs([...thumbs, ...newItem]);
+    setIsMinting(false);
+    setIsLoading(true);
+    setMessage("MLFalse...");
+ 
     // setItems((prevArr) => ([...prevArr, newItem]));
 
     return url;
   };
 
-  // Mint Function
-  const mintImage = async (tokenURI) => {
-    console.log("tokenURI:", tokenURI);
-    // setMessage("");
 
-    // const signer = await provider.getSigner();
-    // const transaction = await nft
-    //   .connect(signer)
-    //   .mint(tokenURI, { value: ethers.utils.parseUnits("1", "ether") });
-    // await transaction.wait();
-
-    // console.log("signer:", signer);
-
-    // const hash = transaction.hash;
-
-
-    // // await uploadImage(hash);
-    // setTransactionHash(hash);
-  };
-
+  console.log("localStorage", localStorage);
+  console.log("formData", formData);
+  console.log("points", powerPoints);
   console.log("thumbs", thumbs);
   useEffect(() => {
     loadBlockchainData();
   }, []);
 
- 
+  
+
+      
+  
+
 
   return (
     <div>
-      <Navigation account={account} setAccount={setAccount} />
+      <Navigation
+        account={account}
+        setAccount={setAccount}
+        provider={provider}
+      />
       <div className="provider">
         {" "}
         {provider ? "" : "Install MetaMask to Connect"}
@@ -317,6 +342,11 @@ function App() {
             setColour={setColour}
             setArtist={setArtist}
             setPattern={setPattern}
+            setFormData={setFormData}
+            formData={formData}
+            style={style}
+            description={description}
+            title={title}
           />
 
           <Keywords
@@ -349,8 +379,7 @@ function App() {
           title={title}
           metaData={metaData}
           transactionHash={transactionHash}
-      
-          
+          powerPoints={powerPoints}
         />
       </div>
 
@@ -364,8 +393,8 @@ function App() {
           account={account}
           isMinting={isMinting}
           transactionHash={transactionHash}
-      
-        
+          message={message}
+          isLoading={isLoading}
         />
       ) : (
         <div className="heading">

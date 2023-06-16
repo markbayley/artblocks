@@ -5,6 +5,9 @@ const subjects = [
     name: "Subject",
   },
   {
+    name: "Cute Animal",
+  },
+  {
     name: "Landscape",
   },
   {
@@ -36,7 +39,19 @@ const words = [
 
 const patterns = [
   {
-    name: "Pattern",
+    name: "Textures",
+  },
+  {
+    name: "Matte",
+  },
+  {
+    name: "Glossy",
+  },
+  {
+    name: "Octane Render",
+  },
+  {
+    name: "Metalic",
   },
   {
     name: "Stripes",
@@ -67,6 +82,15 @@ const patterns = [
   },
   {
     name: "Angular",
+  },
+  {
+    name: "Smooth",
+  },
+  {
+    name: "Rough",
+  },
+  {
+    name: "Golden Ratio",
   },
 ];
 
