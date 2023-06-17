@@ -119,10 +119,11 @@ form {
 form input[type="text"] {
   min-width: 25vw;
   height: 50px;
-  /* margin: 10px 0px 0px 0px; */
+  margin-top: 10px;
   padding: 10px 0px 0px 15px;
   border: none;
   border-bottom: 1px solid var(--clr-blue);
+  text-transform: capitalize;
 }
 
 input + input {
@@ -175,6 +176,8 @@ select + select {
   margin-left: 10px;
 }
 
+
+
 .check {
   display: flex;
   width: 100%;
@@ -195,9 +198,29 @@ select + select {
   /* padding-top: 10px; */
   display: flex;
   justify-content: flex-start;
-  max-width: 50vw;
-  flex-wrap: wrap;
+  /* max-width: 51vw; */
+  max-width: 25vw;
+
+  flex-wrap: nowrap;
   gap: 5px;
+}
+
+.fade-in {
+  opacity: 1;
+
+  animation-name: fadeInOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-duration: 0.3s;
+}
+
+@keyframes fadeInOpacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .title {
@@ -217,7 +240,16 @@ select + select {
 .activeButton {
   background-color: var(--clr-blue);
   color: white;
-  height: 39px;
+  height: 30px;
+  font-size: 0.8em;
+}
+
+.colourButton {
+  /* background-color: var(--clr-blue); */
+  color: white;
+  height: 30px;
+  font-size: 0.8em;
+  border: none;
 }
 
 .waitingButton {
@@ -238,7 +270,6 @@ button {
   background-color: white;
   border: 1px solid var(--clr-blue);
   border-radius: 5px;
-
 }
 
 button + button {
@@ -246,7 +277,7 @@ button + button {
 }
 
 button:hover {
-  background-color: var(--clr-blue);
+  background-color: var(--clr-blue-2);
   color: white;
   transition: all 250ms ease;
 }
@@ -276,11 +307,24 @@ button:hover {
   width: 20px;
   height: 10px;
   /* background-color: white; */
-  border: 1px solid white;
+  border: 1px solid gray;
   border-radius: 5px;
   padding: 0px 5px;
   margin: 0px 0px 20px 0px;
+  background-color: #f8b817;
+  color: red !important;
 }
+
+
+
+.color-square {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  /* border: 1px solid #000000; */
+}
+
 
 /* .icon:hover {
   width: 200px;
@@ -294,8 +338,6 @@ button:hover {
 /* ------------------------------------------------------ */
 /* -- IMAGE -- */
 
-
-
 .thumbnails {
   display: flex;
   flex-wrap: wrap;
@@ -306,19 +348,19 @@ button:hover {
 
 .thumbnails::after {
   content: "";
- 
+
   flex-basis: 0px;
 }
 
 .thumbnails > .thumbnail {
-   flex-basis: 300px;
+  flex-basis: 300px;
 
-   position: relative;
-   cursor: pointer;
+  position: relative;
+  cursor: pointer;
 
-   text-transform: capitalize;
-   /* border: 2px solid lightgray; */
-   border-radius: 5px;
+  text-transform: capitalize;
+  /* border: 2px solid lightgray; */
+  border-radius: 5px;
 }
 
 .thumbnails .thumbnail img {
@@ -341,12 +383,21 @@ button:hover {
   justify-content: flex-start;
 }
 
- .overlay > .points  {
-    background: red;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin: 5px; 
+.overlay > .points {
+  background: red;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.overlay > .points-modal {
+  background: red;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin: 20px;
+  font-size: 1.2em;
 }
 
 .message {
@@ -361,8 +412,7 @@ button:hover {
   flex-direction: column;
 }
 
-
- .loading {
+.loading {
   opacity: 1;
   animation: fade 2s infinite;
 }
@@ -377,12 +427,10 @@ button:hover {
   }
 }
 
-
 .placeholder-image {
   width: 360px;
-  border: 2px solid var(--clr-blue);
+  border: 2px solid var(--clr-orange);
 }
-
 
 .image__placeholder p {
   margin: 0 10px;
@@ -446,13 +494,12 @@ p {
   .thumbnails {
     /* width: 300px;
     height: 300px; */
-    
   }
 
   .thumbnail img {
-
     /* border-radius: 6px; */
     /* margin: 10px 10px 0px 10px; */
-
   }
 }
+
+

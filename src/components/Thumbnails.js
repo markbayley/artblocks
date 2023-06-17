@@ -101,7 +101,7 @@ const Thumbnails = ({
           <Modal.Title id="example-modal-sizes-title-lg" className="title">
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div>
-                {modalData.title},&nbsp;<em>"{modalData.description}"</em>,
+                {modalData.title}&nbsp;<em>"{modalData.description}"</em>
               </div>
               <div>
                 &nbsp;&nbsp;{" "}
@@ -128,6 +128,20 @@ const Thumbnails = ({
         </Modal.Header>
         <Modal.Body>
           <img src={modalData.url} alt="AI thumbnail" width="100%" />
+          <div className="overlay">
+          {modalData.hash &&
+                      <span className="points-modal">
+                        {" "}
+                        <a
+                          target="_blank"
+                          href={`https://sepolia.etherscan.io/tx/${modalData.hash}`}
+                        >
+                          {modalData.hash.slice(64, 66).toUpperCase()}
+                        </a>
+                      </span>
+}
+                    </div>
+     
         </Modal.Body>
       </Modal>
     </>

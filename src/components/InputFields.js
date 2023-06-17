@@ -5,74 +5,150 @@ const colours = [
     name: "Colours",
   },
   {
-    name: "Turquoise",
+    name: "seagreen", color: "#2E8B57"
+  },
+ 
+  {
+    name: "green", color: "#008000"
   },
   {
-    name: "Citrine",
+    name: "forestgreen", color: "#228B22"
   },
   {
-    name: "Ochre",
+    name: "limegreen", color: "#32CD32"
+  },
+ 
+  {
+    name: "greenyellow", color: "#ADFF2F"
+  },
+ 
+  {
+    name: "yellow", color: "#FFFF00"
+  },
+ 
+  {
+    name: "gold", color: "#FFD700"
   },
   {
-    name: "Apricot",
+    name: "orange", color: "#FFA500"
   },
   {
-    name: "Beige",
+    name: "tomato", color: "#FF6347"
+  },
+ 
+  {
+    name: "red", color: "#FF0000"
   },
   {
-    name: "Raw Sienna",
+    name: "crimson", color: "#DC143C"
+  },
+
+
+  {
+    name: "hotpink", color: "#FF69B4"
   },
   {
-    name: "Fushcia",
+    name: "orchid", color: "#DA70D6"
+  },
+ 
+  {
+    name: "violet", color: "#EE82EE"
+  },
+
+  {
+    name: "plum", color: "#DDA0DD"
   },
   {
-    name: "Coral",
+    name: "lightpink", color: "#FFB6C1"
   },
   {
-    name: "Sepia",
+    name: "lightcoral", color: "#F08080"
+  },
+  // {
+  //   name: "salmon", color: "#FA8072"
+  // },
+  {
+    name: "coral", color: "#FF7F50"
+  },
+ 
+  {
+    name: "darkorchid", color: "#9932CC"
   },
   {
-    name: "Amber",
+    name: "mediumorchid", color: "#BA55D3"
+  },
+
+
+
+  {
+    name: "slateblue", color: "#6A5ACD"
   },
   {
-    name: "Scarlet",
+    name: "royalblue", color: "#4169E1"
   },
   {
-    name: "Crimson",
+    name: "dodgerblue", color: "#1E90FF"
   },
   {
-    name: "Vermilion",
+    name: "steelblue", color: "#4682B4"
+  },
+ 
+  {
+    name: "skyblue", color: "#87CEEB"
   },
   {
-    name: "Cadmium",
+    name: "paleturquoise", color: "#AFEEEE"
   },
   {
-    name: "Mauve",
+    name: "aquamarine",  color: "#7FFFD4"
   },
   {
-    name: "Gold",
+    name: "turquoise",  color: "#40E0D0"
   },
   {
-    name: "Lime",
+    name: "cadetblue", color: "#5F9EA0"
+  },
+
+  {
+    name: "teal", color: "#008080"
   },
   {
-    name: "Olive",
+    name: "darkcyan", color: "#008B8B"
+  },
+ 
+ 
+  {
+    name: "olivedrab", color: "#6B8E23"
   },
   {
-    name: "Viridian",
+    name: "olive", color: "#808000"
   },
   {
-    name: "Cobolt",
+    name: "wheat", color: "#F5DEB3"
+  },
+
+
+
+  {
+    name: "darkkhaki", color: "#BDB76B"
   },
   {
-    name: "Teal",
+    name: "goldenrod", color: "#DAA520"
   },
   {
-    name: "Cerulean",
+    name: "peru", color: "#CD853F"
   },
   {
-    name: "Indigo",
+    name: "chocolate", color: "#D2691E"
   },
+  {
+    name: "sienna", color: "#A0522D"
+  },
+  {
+    name: "brown", color: "#A52A2A"
+  },
+ 
+ 
 ];
 
 const artists = [
@@ -155,16 +231,10 @@ const styles = [
     name: "Anime",
   },
   {
-    name: "Digital Illustration",
-  },
-  {
-    name: "Highly Detaailed",
-  },
-  {
     name: "Comic Book",
   },
   {
-    name: "Lithograph",
+    name: "Graphic Novel",
   },
   {
     name: "Childrens Book",
@@ -174,15 +244,6 @@ const styles = [
   },
   {
     name: "Pop Art",
-  },
-  {
-    name: "Street Art",
-  },
-  {
-    name: "Print Art",
-  },
-  {
-    name: "Sketch Art",
   },
   {
     name: "Renaissance",
@@ -215,34 +276,58 @@ const mediums = [
     name: "Mediums",
   },
   {
-    name: "Graphic Novel",
+    name: "Print",
+  },
+  {
+    name: "Sketch",
+  },
+  {
+    name: "Digital",
+  },
+  {
+    name: "Illustration",
   },
   {
     name: "Cinematic",
   },
   {
+    name: "Lithograph",
+  },
+  {
+    name: "Drawing",
+  },
+  {
+    name: "Pastels",
+  },
+  {
+    name: "Film Shot",
+  },
+  {
+    name: "Photograhy",
+  },
+  {
     name: "Watercolor",
   },
   {
-    name: "Oil",
+    name: "Oil Canvas",
   },
   {
     name: "Charcoal",
   },
   {
-    name: "Ink",
+    name: "Ink Paint",
   },
-  {
-    name: "Gouche",
-  },
+  // {
+  //   name: "Gouche",
+  // },
   {
     name: "Acrylic",
   },
   {
-    name: "Pencil Drawing",
+    name: "Pencil",
   },
   {
-    name: "Pastels",
+    name: "Crayon",
   },
 ];
 
@@ -254,28 +339,56 @@ const subjects = [
     name: "Cute Animal",
   },
   {
-    name: "Landscape",
-  },
-  {
     name: "Portrait",
-  },
-  {
-    name: "Seascape",
   },
   {
     name: "Figure",
   },
   {
+    name: "Face",
+  },
+  {
+    name: "Girl",
+  },
+  {
+    name: "Boy",
+  },
+  {
+    name: "Warrior",
+  },
+  {
     name: "Fruit Bowl",
   },
   {
-    name: "Collection",
+    name: "Streetscape",
+  },
+  {
+    name: "Seascape",
+  },
+  {
+    name: "Landscape",
+  },
+  {
+    name: "Nature",
+  },
+
+  {
+    name: "Building",
+  },
+  {
+    name: "City",
+  },
+  {
+    name: "Vehicle",
   },
 ];
 
 const patterns = [
   {
     name: "Textures",
+  },
+  {
+    name: "Highly Detailed",
   },
   {
     name: "Matte",
@@ -330,30 +443,12 @@ const patterns = [
   },
 ];
 
-const words = [
-  [],
-  ["trees", "farm", "sky", "lake", "hills", "clouds"],
-  ["face", "smile", "dress", "jewels", "mouth", "family"],
-  ["boats", "fish", "beach", "cliffs", "island", "sand"],
-  ["man", "woman", "child", "slumped", "arms", "thin"],
-  ["apple", "pear", "fresh", "banana", "colorful", "wooden"],
-  ["street", "beach", "face", "woman", "colorful", "hills"],
-];
-
 const InputFields = ({
   setTitle,
   setDescription,
-  setSubject,
-  setMedium,
-  setStyle,
-  setColour,
-  setArtist,
-  setPattern,
   setFormData,
   formData,
   style,
-  description,
-  title,
   active,
   medium,
   subject,
@@ -362,36 +457,55 @@ const InputFields = ({
   colour,
   setActive,
   setKeyword,
-  keyword
+  keyword,
 }) => {
-  // useEffect(() => {
+  const patternWords = active.filter((word) =>
+    patterns.some((pattern) => pattern.name === word)
+  );
 
-  // }, [formData]);
+  const colourWords = active.filter((word) =>
+    colours.some((colour) => colour.name === word)
+  );
 
-  const wordGroup =
-  words.find((word, index) => subjects[index]?.name === subject) || [];
+  const mywords = colours.filter((colour) => 
+       colours.some((colour) => colour.color === colour)
+  );
 
-const uniqueKeywords = [...new Set([ active])];
+  const subjectWords = active.filter((word) =>
+    subjects.some((subject) => subject.name === word)
+  );
 
-const handleFormChange = (e) => {
-  // setActive([...wordGroup]);
-  setActive([...active, e.target.value]);
-  setKeyword([...keyword, e.target.value]);
+  const mediumWords = active.filter((word) =>
+    mediums.some((medium) => medium.name === word)
+  );
 
-  console.log(active);
-};
+  const styleWords = active.filter((word) =>
+    styles.some((style) => style.name === word)
+  );
 
-const handleChecked = (e) => {
-  e.preventDefault();
+  const artistWords = active.filter((word) =>
+    artists.some((artist) => artist.name === word)
+  );
 
-  if (active.includes(e.target.value)) {
-    const newActive = active.filter((item) => item !== e.target.value);
-    setActive(newActive);
-  } else {
-    setActive((prevArr) => [...prevArr, e.target.value]);
-    setKeyword((prevArr) => [...prevArr, e.target.value]);
-  }
-};
+  const handleFormChange = (e) => {
+    // setActive([...wordGroup]);
+    setActive([...active, e.target.value]);
+    setKeyword([...keyword, e.target.value]);
+
+    console.log(active);
+  };
+
+  const handleChecked = (e) => {
+    e.preventDefault();
+
+    if (active.includes(e.target.value)) {
+      const newActive = active.filter((item) => item !== e.target.value);
+      setActive(newActive);
+    } else {
+      setActive((prevArr) => [...prevArr, e.target.value]);
+      setKeyword((prevArr) => [...prevArr, e.target.value]);
+    }
+  };
 
   return (
     <div>
@@ -417,65 +531,102 @@ const handleChecked = (e) => {
       </div>
 
       <div className="check">
-        {/* <select
-          onChange={(e) => {
-            setSubject(e.target.value);
-            setFormData({ ...formData, subject: e.target.value });
-          }}
-        >
-          {subjects.map((subject, index) => (
-            <option value={subject.name} key={index}>
-              {subject.name}
-            </option>
-          ))}
-        </select>
-        <select
-          style={{ width: "" }}
-          onChange={(e) => {
-            setStyle(e.target.value);
-            setFormData({ ...formData, style: e.target.value });
-          }}
-        >
+        <select value={style} onChange={handleFormChange}>
           {styles.map((style, index) => (
-            <option value={style.name} key={index}>
+            <option key={index} value={style.name} >
               {style.name}
             </option>
           ))}
-        </select> */}
-  
-        <select value={pattern} onChange={handleFormChange}>
-      {patterns.map((pattern, index) => (
-        <option key={index} value={pattern.name}>
-          {pattern.name}
-        </option>
-      ))}
-    </select>
-  
-      <select value={colour} onChange={handleFormChange}>
-      {colours.map((colour, index) => (
-        <option key={index} value={colour.name}>
-          {colour.name}
-        </option>
-      ))}
-    </select>
-      </div>
-
-      <div className="check">
-      <select value={artist} onChange={handleFormChange}>
+        </select>
+        <select value={artist} onChange={handleFormChange}>
           {artists.map((artist, index) => (
             <option key={index} value={artist.name}>
               {artist.name}
             </option>
           ))}
         </select>
+      </div>
 
-        <select value={style} onChange={handleFormChange}>
-          {styles.map((style, index) => (
-            <option key={index} value={style.name}>
-              {style.name}
+      <div className="check">
+        <div className="tabs">
+          {styleWords.slice(0, 4).map((item, index) => (
+            <button
+              key={index}
+              onClick={handleChecked}
+              value={item}
+              className={`fade-in button ${
+                active.includes(item) ? "activeButton" : ""
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+
+        <div className=" tabs">
+          {artistWords.slice(0, 4).map((item, index) => (
+            <button
+              key={index}
+              onClick={handleChecked}
+              value={item}
+              className={`fade-in button ${
+                active.includes(item) ? "activeButton" : ""
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="check">
+        <select value={pattern} onChange={handleFormChange}>
+          {patterns.map((pattern, index) => (
+            <option key={index} value={pattern.name}>
+              {pattern.name}
             </option>
           ))}
         </select>
+        <select value={colour} onChange={handleFormChange}>
+          {colours.map((colour, index) => (
+              <option
+              key={index}
+              value={colour.name}
+           
+            >
+              {colour.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="check">
+        <div className="tabs">
+          {patternWords.slice(0, 4).map((item, index) => (
+            <button
+              key={index}
+              onClick={handleChecked}
+              value={item}
+              className={`fade-in button ${
+                active.includes(item) ? "activeButton" : ""
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+
+        <div className=" tabs">
+          {colourWords.slice(0, 5).map((item, index) => (
+            <button style={{backgroundColor: item}} className="colourButton fade-in"
+              key={index}
+              onClick={handleChecked}
+              value={item}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="check">
@@ -494,23 +645,44 @@ const handleChecked = (e) => {
             </option>
           ))}
         </select>
-     
       </div>
 
+      <div className="check">
+        <div className="tabs">
+          {subjectWords.slice(0, 4).map((item, index) => (
+            <button
+              key={index}
+              onClick={handleChecked}
+              value={item}
+              className={`fade-in button ${
+                active.includes(item) ? "activeButton" : ""
+              }`}
+            >
+              {item}
+              {/* <span className="icon">+</span>  */}
+            </button>
+          ))}
+        </div>
 
-
+        <div className=" tabs">
+          {mediumWords.slice(0, 4).map((item, index) => (
+            <button
+              key={index}
+              onClick={handleChecked}
+              value={item}
+              className={`fade-in button ${
+                active.includes(item) ? "activeButton" : ""
+              }`}
+            >
+              {item}
+              {/* <span className="icon">+</span>  */}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* <div className="check tabs">
-        <button  onClick={handleChecked} value={formData.medium} className={`button ${active.includes(formData.medium) ? "activeButton" : ""}`}>{formData.medium}</button>
-        <button  onClick={handleChecked}value ={formData.style} className={`button ${active.includes(formData.style) ? "activeButton" : ""}`}>{formData.style}</button>
-        <button  onClick={handleChecked} value={formData.colour} className={`button ${active.includes(formData.colour) ? "activeButton" : ""}`}>{formData.colour}</button>
-        <button  onClick={handleChecked} value={formData.artist} className={`button ${active.includes(formData.artist) ? "activeButton" : ""}`}>{formData.artist}</button>
-        <button  onClick={handleChecked} value={formData.pattern}className={`button ${active.includes(formData.pattern) ? "activeButton" : ""}`}>{formData.pattern}</button>
-        <button  onClick={handleChecked} value={formData.subject} className={`button ${active.includes(formData.subject) ? "activeButton" : ""}`}>{formData.subject}</button>
-      </div> */}
-
-      <div className="check tabs">
-        {active.slice(0, 12).map((item, index) => (
+        {active.slice(0, 16).map((item, index) => (
           <button
             key={index}
             onClick={handleChecked}
@@ -518,10 +690,10 @@ const handleChecked = (e) => {
             className={`button ${active.includes(item) ? "activeButton" : ""}`}
           >
           {item} 
-          {/* <span className="icon">+</span>  */}
+          <span className="icon">+</span> 
           </button>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

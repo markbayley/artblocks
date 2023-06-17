@@ -319,6 +319,7 @@ function App() {
             description={description}
             title={title}
             subject={subject}
+            artist={artist}
             medium={medium}
             active={active}
             setActive={setActive}
